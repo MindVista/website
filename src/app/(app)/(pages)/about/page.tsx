@@ -24,9 +24,8 @@ const teams = {
         { role: "TikTok & Video Content Creator", name: "Naomi Harmel", pronouns: "she/her", image: "/team/naomi.webp" },
     ],
     website: [
-        { role: "Website Content Creator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
-        { role: "Website Developer", name: "Atlas Gong", pronouns: "he/him", image: "/team/atlas.webp" },
-        { role: "Website Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
+        { role: "Full-Stack Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
+        { role: "Website Content Coordinator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
     ],
     content: [
         { role: "Newsletter Content Creator", name: "Gianluca Caporicci", pronouns: "he/him", image: "/team/gianluca.webp" },
@@ -87,10 +86,5 @@ export default function AboutPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
     const page = await getPageFromCMS("about");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+    return { ...(page && { title: page.title, description: page.seoDescription }) };
 }
