@@ -21,7 +21,6 @@ const teams = {
     marketing: [
         { role: "Social Media Coordinator", name: "Amanda Borja", pronouns: "she/her" },
         { role: "Marketing & Outreach Coordinator", name: "Paige Metcalf", pronouns: "she/her", image: "/team/paige.webp" },
-        { role: "TikTok & Video Content Creator", name: "Naomi Harmel", pronouns: "she/her", image: "/team/naomi.webp" },
     ],
     website: [
         { role: "Full-Stack Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
