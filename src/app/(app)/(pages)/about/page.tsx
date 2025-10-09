@@ -6,24 +6,27 @@ import { getPageFromCMS } from "@/lib/getPageFromCMS";
 
 const teams = {
     leadership: [
-        { role: "Senior Advisor", name: "Charlotte Rotstein", pronouns: "she/they", image: "/team/charlotte.webp" },
         { role: "Co-President", name: "Kristie Lam", pronouns: "she/her", image: "/team/kristie.webp" },
         { role: "Co-President", name: "Abbie Carnahan", pronouns: "she/her", image: "/team/abbie.webp" },
+        { role: "Senior Advisor", name: "Charlotte Rotstein", pronouns: "she/they", image: "/team/charlotte.webp" },
     ],
     events: [
         { role: "Events Coordinator", name: "Catherine McCourt  ", pronouns: "she/her", image: "/team/catherine.webp" },
         { role: "Events Coordinator", name: "Sandrine Huard", pronouns: "she/her", image: "/team/sandrine.webp" },
     ],
     finance: [
+        { role: "Sponsorship Coordinator", name: "Charlotte Godbout Fowler", pronouns: "she/her", image: "/team/charlotte-2.webp" },
         { role: "Sponsorship Coordinator", name: "Julia Rotiroti", pronouns: "she/her", image: "/team/julia.webp" },
         { role: "Finance Coordinator", name: "Christina Huan", pronouns: "she/her", image: "/team/christina.webp" },
     ],
     marketing: [
-        { role: "Social Media Coordinator", name: "Amanda Borja", pronouns: "she/her" },
+        { role: "Social Media Coordinator", name: "Amanda Borja", pronouns: "she/her", image: "/team/amanda.webp" },
         { role: "Marketing & Outreach Coordinator", name: "Paige Metcalf", pronouns: "she/her", image: "/team/paige.webp" },
     ],
     website: [
         { role: "Full-Stack Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
+        { role: "Full-Stack Developer", name: "Daniel Zoubarev", pronouns: "he/him", image: "/team/daniel.webp" },
+        { role: "Full-Stack Developer", name: "Rhea Talwar", pronouns: "she/her", image: "/team/rhea.webp" },
         { role: "Website Content Coordinator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
     ],
     content: [
@@ -45,7 +48,7 @@ export default function AboutPage() {
                 <Image unoptimized priority src="/team/group-photo.webp" alt="MindVista Team" width={1920} height={1280} className="h-full w-full object-cover brightness-90 transition-transform duration-500 group-hover:scale-105 group-hover:brightness-100" />
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
                 <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4 text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                    <h3 className="text-xl font-semibold">MindVista Team 2024-2025</h3>
+                    <h3 className="text-xl font-semibold">MindVista Team 2025-2026</h3>
                     <p className="text-sm">Committed to student wellness and engagement.</p>
                 </div>
             </div>
