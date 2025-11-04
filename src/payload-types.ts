@@ -109,12 +109,14 @@ export interface Config {
     sponsor: Sponsor;
     volunteer: Volunteer;
     'announcement-bar': AnnouncementBar;
+    about: About;
   };
   globalsSelect: {
     'holistic-wellness': HolisticWellnessSelect<false> | HolisticWellnessSelect<true>;
     sponsor: SponsorSelect<false> | SponsorSelect<true>;
     volunteer: VolunteerSelect<false> | VolunteerSelect<true>;
     'announcement-bar': AnnouncementBarSelect<false> | AnnouncementBarSelect<true>;
+    about: AboutSelect<false> | AboutSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1067,6 +1069,25 @@ export interface AnnouncementBar {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about".
+ */
+export interface About {
+  id: number;
+  page: number | Page;
+  teamMembers: {
+    name: string;
+    role: string;
+    team: string;
+    pronouns: string;
+    image: number | Media;
+    id?: string | null;
+  }[];
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "holistic-wellness_select".
  */
 export interface HolisticWellnessSelect<T extends boolean = true> {
@@ -1167,6 +1188,27 @@ export interface AnnouncementBarSelect<T extends boolean = true> {
         text?: T;
         textFr?: T;
         href?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about_select".
+ */
+export interface AboutSelect<T extends boolean = true> {
+  page?: T;
+  teamMembers?:
+    | T
+    | {
+        name?: T;
+        role?: T;
+        team?: T;
+        pronouns?: T;
+        image?: T;
+        id?: T;
       };
   _status?: T;
   updatedAt?: T;

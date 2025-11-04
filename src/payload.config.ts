@@ -27,6 +27,7 @@ import { Events } from "./collections/Events";
 import { SponsorPage } from "./globals/SponsorPage";
 import { VolunteerPage } from "./globals/VolunteerPage";
 import { AnnouncementBar } from "./globals/AnnouncementBar";
+import { AboutPage } from "./globals/AboutPage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -118,7 +119,7 @@ export default buildConfig({
         avatar: "default",
     },
     collections: [Users, Media, Pages, LegalPages, Events, Clubs, Resources, ClubTagCategories, ResourceTagCategories, ClubTags, ResourceTags],
-    globals: [HolisticWellnessPage, SponsorPage, VolunteerPage, AnnouncementBar],
+    globals: [HolisticWellnessPage, SponsorPage, VolunteerPage, AnnouncementBar, AboutPage],
     editor: lexicalEditor(),
     secret: process.env.PAYLOAD_SECRET || "",
     typescript: {
@@ -144,4 +145,18 @@ export default buildConfig({
         }),
         payloadSentinel(),
     ],
+
+    onInit: async (payLoadInstance) => {
+        try {
+            await payLoadInstance.findGlobal({ slug: "about" });
+            console.log("About global already exists.");
+        } catch {
+            console.log("Creating About global...");
+            await payLoadInstance.updateGlobal({
+                slug: "about",
+                data: { teamMembers: [] },
+            });
+            console.log("Created initial About global.");
+        }
+    },
 });

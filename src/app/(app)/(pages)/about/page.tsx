@@ -3,6 +3,7 @@ import Hr from "../../components/Hr";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getPayloadClient } from "@/payloadClient";
 
 const teams = {
     leadership: [
@@ -40,7 +41,9 @@ const teams = {
     ],
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+    const data = await (await getPayloadClient()).findGlobal({ slug: "volunteer" });
+
     return (
         <div className="container mx-auto max-w-7xl px-6 pb-12 pt-20">
             {/* Group Photo */}
