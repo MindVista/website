@@ -4,7 +4,7 @@ interface SponsorLogosProps {
     sponsors: Sponsor["sponsors"]; // still here but unused
 }
 
-export function SponsorLogos() {
+export function SponsorLogos(_props: SponsorLogosProps) {
     const localLogos = [
         { src: "/sponsor/caffettiera.png", url: "https://www.caffettiera.ca" },
         { src: "/sponsor/aym.webp", url: "https://www.ashtangamontreal.com" },
