@@ -24,17 +24,19 @@ export const AboutPage: GlobalConfig = {
     },
     fields: [
         {
-            name: "page",
+            name: "groupPicture",
+            label: "Group Picture",
+            type: "upload",
+            relationTo: "media",
             required: true,
-            type: "relationship",
-            relationTo: "pages",
             access: {
-                update: denyAccessField,
+                create: canEditContent,
+                update: canEditContent,
             },
         },
         {
-            name: "teamMembers",
-            label: "Team Members",
+            name: "teams",
+            label: "Teams",
             type: "array",
             required: true,
             access: {
@@ -43,30 +45,39 @@ export const AboutPage: GlobalConfig = {
             },
             fields: [
                 {
-                    name: "name",
+                    name: "teamName",
+                    label: "Team Name",
                     type: "text",
                     required: true,
                 },
                 {
-                    name: "role",
-                    type: "text",
+                    name: "members",
+                    label: "Team Members",
+                    type: "array",
                     required: true,
-                },
-                {
-                    name: "team",
-                    type: "text",
-                    required: true,
-                },
-                {
-                    name: "pronouns",
-                    type: "text",
-                    required: true,
-                },
-                {
-                    name: "image",
-                    type: "upload",
-                    relationTo: "media",
-                    required: true,
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                            required: true,
+                        },
+                        {
+                            name: "role",
+                            type: "text",
+                            required: true,
+                        },
+                        {
+                            name: "pronouns",
+                            type: "text",
+                            required: true,
+                        },
+                        {
+                            name: "image",
+                            type: "upload",
+                            relationTo: "media",
+                            required: true,
+                        },
+                    ],
                 },
             ],
         },

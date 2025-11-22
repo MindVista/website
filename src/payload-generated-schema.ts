@@ -1034,28 +1034,46 @@ export const _announcement_bar_v = pgTable(
     }),
 );
 
-export const about_team_members = pgTable(
-    "about_team_members",
+export const about_teams_members = pgTable(
+    "about_teams_members",
     {
         _order: integer("_order").notNull(),
-        _parentID: integer("_parent_id").notNull(),
+        _parentID: varchar("_parent_id").notNull(),
         id: varchar("id").primaryKey(),
         name: varchar("name"),
         role: varchar("role"),
-        team: varchar("team"),
         pronouns: varchar("pronouns"),
         image: integer("image_id").references(() => media.id, {
             onDelete: "set null",
         }),
     },
     (columns) => ({
-        _orderIdx: index("about_team_members_order_idx").on(columns._order),
-        _parentIDIdx: index("about_team_members_parent_id_idx").on(columns._parentID),
-        about_team_members_image_idx: index("about_team_members_image_idx").on(columns.image),
+        _orderIdx: index("about_teams_members_order_idx").on(columns._order),
+        _parentIDIdx: index("about_teams_members_parent_id_idx").on(columns._parentID),
+        about_teams_members_image_idx: index("about_teams_members_image_idx").on(columns.image),
+        _parentIDFk: foreignKey({
+            columns: [columns["_parentID"]],
+            foreignColumns: [about_teams.id],
+            name: "about_teams_members_parent_id_fk",
+        }).onDelete("cascade"),
+    }),
+);
+
+export const about_teams = pgTable(
+    "about_teams",
+    {
+        _order: integer("_order").notNull(),
+        _parentID: integer("_parent_id").notNull(),
+        id: varchar("id").primaryKey(),
+        teamName: varchar("team_name"),
+    },
+    (columns) => ({
+        _orderIdx: index("about_teams_order_idx").on(columns._order),
+        _parentIDIdx: index("about_teams_parent_id_idx").on(columns._parentID),
         _parentIDFk: foreignKey({
             columns: [columns["_parentID"]],
             foreignColumns: [about.id],
-            name: "about_team_members_parent_id_fk",
+            name: "about_teams_parent_id_fk",
         }).onDelete("cascade"),
     }),
 );
@@ -1064,7 +1082,7 @@ export const about = pgTable(
     "about",
     {
         id: serial("id").primaryKey(),
-        page: integer("page_id").references(() => pages.id, {
+        groupPicture: integer("group_picture_id").references(() => media.id, {
             onDelete: "set null",
         }),
         _status: enum_about_status("_status").default("draft"),
@@ -1072,20 +1090,19 @@ export const about = pgTable(
         createdAt: timestamp("created_at", { mode: "string", withTimezone: true, precision: 3 }),
     },
     (columns) => ({
-        about_page_idx: index("about_page_idx").on(columns.page),
+        about_group_picture_idx: index("about_group_picture_idx").on(columns.groupPicture),
         about__status_idx: index("about__status_idx").on(columns._status),
     }),
 );
 
-export const _about_v_version_team_members = pgTable(
-    "_about_v_version_team_members",
+export const _about_v_version_teams_members = pgTable(
+    "_about_v_version_teams_members",
     {
         _order: integer("_order").notNull(),
         _parentID: integer("_parent_id").notNull(),
         id: serial("id").primaryKey(),
         name: varchar("name"),
         role: varchar("role"),
-        team: varchar("team"),
         pronouns: varchar("pronouns"),
         image: integer("image_id").references(() => media.id, {
             onDelete: "set null",
@@ -1093,13 +1110,33 @@ export const _about_v_version_team_members = pgTable(
         _uuid: varchar("_uuid"),
     },
     (columns) => ({
-        _orderIdx: index("_about_v_version_team_members_order_idx").on(columns._order),
-        _parentIDIdx: index("_about_v_version_team_members_parent_id_idx").on(columns._parentID),
-        _about_v_version_team_members_image_idx: index("_about_v_version_team_members_image_idx").on(columns.image),
+        _orderIdx: index("_about_v_version_teams_members_order_idx").on(columns._order),
+        _parentIDIdx: index("_about_v_version_teams_members_parent_id_idx").on(columns._parentID),
+        _about_v_version_teams_members_image_idx: index("_about_v_version_teams_members_image_idx").on(columns.image),
+        _parentIDFk: foreignKey({
+            columns: [columns["_parentID"]],
+            foreignColumns: [_about_v_version_teams.id],
+            name: "_about_v_version_teams_members_parent_id_fk",
+        }).onDelete("cascade"),
+    }),
+);
+
+export const _about_v_version_teams = pgTable(
+    "_about_v_version_teams",
+    {
+        _order: integer("_order").notNull(),
+        _parentID: integer("_parent_id").notNull(),
+        id: serial("id").primaryKey(),
+        teamName: varchar("team_name"),
+        _uuid: varchar("_uuid"),
+    },
+    (columns) => ({
+        _orderIdx: index("_about_v_version_teams_order_idx").on(columns._order),
+        _parentIDIdx: index("_about_v_version_teams_parent_id_idx").on(columns._parentID),
         _parentIDFk: foreignKey({
             columns: [columns["_parentID"]],
             foreignColumns: [_about_v.id],
-            name: "_about_v_version_team_members_parent_id_fk",
+            name: "_about_v_version_teams_parent_id_fk",
         }).onDelete("cascade"),
     }),
 );
@@ -1108,7 +1145,7 @@ export const _about_v = pgTable(
     "_about_v",
     {
         id: serial("id").primaryKey(),
-        version_page: integer("version_page_id").references(() => pages.id, {
+        version_groupPicture: integer("version_group_picture_id").references(() => media.id, {
             onDelete: "set null",
         }),
         version__status: enum__about_v_version_status("version__status").default("draft"),
@@ -1119,7 +1156,7 @@ export const _about_v = pgTable(
         latest: boolean("latest"),
     },
     (columns) => ({
-        _about_v_version_version_page_idx: index("_about_v_version_version_page_idx").on(columns.version_page),
+        _about_v_version_version_group_picture_idx: index("_about_v_version_version_group_picture_idx").on(columns.version_groupPicture),
         _about_v_version_version__status_idx: index("_about_v_version_version__status_idx").on(columns.version__status),
         _about_v_created_at_idx: index("_about_v_created_at_idx").on(columns.createdAt),
         _about_v_updated_at_idx: index("_about_v_updated_at_idx").on(columns.updatedAt),
@@ -1487,48 +1524,68 @@ export const relations__volunteer_v = relations(_volunteer_v, ({ one, many }) =>
 }));
 export const relations_announcement_bar = relations(announcement_bar, () => ({}));
 export const relations__announcement_bar_v = relations(_announcement_bar_v, () => ({}));
-export const relations_about_team_members = relations(about_team_members, ({ one }) => ({
-    _parentID: one(about, {
-        fields: [about_team_members._parentID],
-        references: [about.id],
-        relationName: "teamMembers",
+export const relations_about_teams_members = relations(about_teams_members, ({ one }) => ({
+    _parentID: one(about_teams, {
+        fields: [about_teams_members._parentID],
+        references: [about_teams.id],
+        relationName: "members",
     }),
     image: one(media, {
-        fields: [about_team_members.image],
+        fields: [about_teams_members.image],
         references: [media.id],
         relationName: "image",
+    }),
+}));
+export const relations_about_teams = relations(about_teams, ({ one, many }) => ({
+    _parentID: one(about, {
+        fields: [about_teams._parentID],
+        references: [about.id],
+        relationName: "teams",
+    }),
+    members: many(about_teams_members, {
+        relationName: "members",
     }),
 }));
 export const relations_about = relations(about, ({ one, many }) => ({
-    page: one(pages, {
-        fields: [about.page],
-        references: [pages.id],
-        relationName: "page",
+    groupPicture: one(media, {
+        fields: [about.groupPicture],
+        references: [media.id],
+        relationName: "groupPicture",
     }),
-    teamMembers: many(about_team_members, {
-        relationName: "teamMembers",
+    teams: many(about_teams, {
+        relationName: "teams",
     }),
 }));
-export const relations__about_v_version_team_members = relations(_about_v_version_team_members, ({ one }) => ({
-    _parentID: one(_about_v, {
-        fields: [_about_v_version_team_members._parentID],
-        references: [_about_v.id],
-        relationName: "version_teamMembers",
+export const relations__about_v_version_teams_members = relations(_about_v_version_teams_members, ({ one }) => ({
+    _parentID: one(_about_v_version_teams, {
+        fields: [_about_v_version_teams_members._parentID],
+        references: [_about_v_version_teams.id],
+        relationName: "members",
     }),
     image: one(media, {
-        fields: [_about_v_version_team_members.image],
+        fields: [_about_v_version_teams_members.image],
         references: [media.id],
         relationName: "image",
     }),
 }));
-export const relations__about_v = relations(_about_v, ({ one, many }) => ({
-    version_page: one(pages, {
-        fields: [_about_v.version_page],
-        references: [pages.id],
-        relationName: "version_page",
+export const relations__about_v_version_teams = relations(_about_v_version_teams, ({ one, many }) => ({
+    _parentID: one(_about_v, {
+        fields: [_about_v_version_teams._parentID],
+        references: [_about_v.id],
+        relationName: "version_teams",
     }),
-    version_teamMembers: many(_about_v_version_team_members, {
-        relationName: "version_teamMembers",
+    members: many(_about_v_version_teams_members, {
+        relationName: "members",
+    }),
+}));
+export const relations__about_v = relations(_about_v, ({ one, many }) => ({
+    version_groupPicture: one(media, {
+        fields: [_about_v.version_groupPicture],
+        references: [media.id],
+        relationName: "version_groupPicture",
+    }),
+    version_teams: many(_about_v_version_teams, {
+        relationName: "version_teams",
     }),
 }));
 
@@ -1585,9 +1642,11 @@ type DatabaseSchema = {
     _volunteer_v: typeof _volunteer_v;
     announcement_bar: typeof announcement_bar;
     _announcement_bar_v: typeof _announcement_bar_v;
-    about_team_members: typeof about_team_members;
+    about_teams_members: typeof about_teams_members;
+    about_teams: typeof about_teams;
     about: typeof about;
-    _about_v_version_team_members: typeof _about_v_version_team_members;
+    _about_v_version_teams_members: typeof _about_v_version_teams_members;
+    _about_v_version_teams: typeof _about_v_version_teams;
     _about_v: typeof _about_v;
     relations_users: typeof relations_users;
     relations_media: typeof relations_media;
@@ -1629,9 +1688,11 @@ type DatabaseSchema = {
     relations__volunteer_v: typeof relations__volunteer_v;
     relations_announcement_bar: typeof relations_announcement_bar;
     relations__announcement_bar_v: typeof relations__announcement_bar_v;
-    relations_about_team_members: typeof relations_about_team_members;
+    relations_about_teams_members: typeof relations_about_teams_members;
+    relations_about_teams: typeof relations_about_teams;
     relations_about: typeof relations_about;
-    relations__about_v_version_team_members: typeof relations__about_v_version_team_members;
+    relations__about_v_version_teams_members: typeof relations__about_v_version_teams_members;
+    relations__about_v_version_teams: typeof relations__about_v_version_teams;
     relations__about_v: typeof relations__about_v;
 };
 

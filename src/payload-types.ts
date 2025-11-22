@@ -1073,13 +1073,16 @@ export interface AnnouncementBar {
  */
 export interface About {
   id: number;
-  page: number | Page;
-  teamMembers: {
-    name: string;
-    role: string;
-    team: string;
-    pronouns: string;
-    image: number | Media;
+  groupPicture: number | Media;
+  teams: {
+    teamName: string;
+    members: {
+      name: string;
+      role: string;
+      pronouns: string;
+      image: number | Media;
+      id?: string | null;
+    }[];
     id?: string | null;
   }[];
   _status?: ('draft' | 'published') | null;
@@ -1199,15 +1202,20 @@ export interface AnnouncementBarSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
-  page?: T;
-  teamMembers?:
+  groupPicture?: T;
+  teams?:
     | T
     | {
-        name?: T;
-        role?: T;
-        team?: T;
-        pronouns?: T;
-        image?: T;
+        teamName?: T;
+        members?:
+          | T
+          | {
+              name?: T;
+              role?: T;
+              pronouns?: T;
+              image?: T;
+              id?: T;
+            };
         id?: T;
       };
   _status?: T;

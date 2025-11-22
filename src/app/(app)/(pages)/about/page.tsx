@@ -5,50 +5,18 @@ import { Metadata } from "next";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";
 import { getPayloadClient } from "@/payloadClient";
 
-const teams = {
-    leadership: [
-        { role: "Co-President", name: "Kristie Lam", pronouns: "she/her", image: "/team/kristie.webp" },
-        { role: "Co-President", name: "Abbie Carnahan", pronouns: "she/her", image: "/team/abbie.webp" },
-        { role: "Senior Advisor", name: "Charlotte Rotstein", pronouns: "she/they", image: "/team/charlotte.webp" },
-    ],
-    events: [
-        { role: "Events Coordinator", name: "Catherine McCourt  ", pronouns: "she/her", image: "/team/catherine.webp" },
-        { role: "Events Coordinator", name: "Sandrine Huard", pronouns: "she/her", image: "/team/sandrine.webp" },
-    ],
-    finance: [
-        { role: "Sponsorship Coordinator", name: "Charlotte Godbout Fowler", pronouns: "she/her", image: "/team/charlotte-2.webp" },
-        { role: "Sponsorship Coordinator", name: "Julia Rotiroti", pronouns: "she/her", image: "/team/julia.webp" },
-        { role: "Finance Coordinator", name: "Christina Huan", pronouns: "she/her", image: "/team/christina.webp" },
-    ],
-    marketing: [
-        { role: "Social Media Coordinator", name: "Amanda Borja", pronouns: "she/her", image: "/team/amanda.webp" },
-        { role: "Marketing & Outreach Coordinator", name: "Paige Metcalf", pronouns: "she/her", image: "/team/paige.webp" },
-    ],
-    website: [
-        { role: "Full-Stack Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
-        { role: "Full-Stack Developer", name: "Daniel Zoubarev", pronouns: "he/him", image: "/team/daniel.webp" },
-        { role: "Full-Stack Developer", name: "Rhea Talwar", pronouns: "she/her", image: "/team/rhea.webp" },
-        { role: "Website Content Coordinator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
-    ],
-    content: [
-        { role: "Newsletter Content Creator", name: "Gianluca Caporicci", pronouns: "he/him", image: "/team/gianluca.webp" },
-        { role: "French Coordinator", name: "Alizée Cyr-Comeault", pronouns: "she/her", image: "/team/alizee.webp" },
-    ],
-    founders: [
-        { role: "Founder", name: "Safiia Abdulkadyrova", pronouns: "she/her", image: "/team/safiia-abdulkadyrova.webp" },
-        { role: "Founder", name: "Lauren Harrison", pronouns: "she/her", image: "/team/lauren-harrison.webp" },
-        { role: "Founder", name: "Hana Jamal", pronouns: "she/her", image: "/team/hana-jamal.webp" },
-    ],
-};
-
 export default async function AboutPage() {
     const data = await (await getPayloadClient()).findGlobal({ slug: "volunteer" });
+    const teamData = await (await getPayloadClient()).findGlobal({ slug: "about" });
+    const groupPicUrl = teamData.groupPicture && typeof teamData.groupPicture !== "number" ? teamData.groupPicture.url || "/team/avatarPlaceholder.png" : "/team/avatarPlaceholder.png";
+
+    const groupPicAlt = teamData.groupPicture && typeof teamData.groupPicture !== "number" ? teamData.groupPicture.alt || "Mindvista Team" : "Mindvista Team";
 
     return (
         <div className="container mx-auto max-w-7xl px-6 pb-12 pt-20">
             {/* Group Photo */}
             <div className="group relative mb-16 aspect-[16/9] w-full overflow-hidden rounded-xl shadow-lg transition-all duration-300">
-                <Image unoptimized priority src="/team/group-photo.webp" alt="MindVista Team" width={1920} height={1280} className="h-full w-full object-cover brightness-90 transition-transform duration-500 group-hover:scale-105 group-hover:brightness-100" />
+                <Image src={groupPicUrl} alt={groupPicAlt} width={1920} height={1280} className="h-full w-full object-cover brightness-90 transition-transform duration-500 group-hover:scale-105 group-hover:brightness-100" />
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
                 <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4 text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
                     <h3 className="text-xl font-semibold">MindVista Team 2025-2026</h3>
@@ -78,13 +46,9 @@ export default async function AboutPage() {
             <Hr className="mb-16" />
 
             {/* Photos sectioned by Team */}
-            <TeamSection title="Leadership & Coordination Team" members={teams.leadership} />
-            <TeamSection title="Events Team" members={teams.events} />
-            <TeamSection title="Finance Team" members={teams.finance} />
-            <TeamSection title="Marketing & Social Media Team" members={teams.marketing} />
-            <TeamSection title="Website Team" members={teams.website} />
-            <TeamSection title="Newsletter Content Creators" members={teams.content} />
-            <TeamSection title="Founders" members={teams.founders} />
+            {teamData.teams.map((team) => {
+                return <TeamSection key={team.teamName} title={team.teamName} members={team.members} />;
+            })}
         </div>
     );
 }
