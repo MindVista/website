@@ -13,6 +13,7 @@ const teams = {
     events: [
         { role: "Events Coordinator", name: "Catherine McCourt  ", pronouns: "she/her", image: "/team/catherine.webp" },
         { role: "Events Coordinator", name: "Sandrine Huard", pronouns: "she/her", image: "/team/sandrine.webp" },
+        { role: "Events Coordinator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
     ],
     finance: [
         { role: "Sponsorship Coordinator", name: "Charlotte Godbout Fowler", pronouns: "she/her", image: "/team/charlotte-2.webp" },
@@ -21,13 +22,12 @@ const teams = {
     ],
     marketing: [
         { role: "Social Media Coordinator", name: "Amanda Borja", pronouns: "she/her", image: "/team/amanda.webp" },
-        { role: "Marketing & Outreach Coordinator", name: "Paige Metcalf", pronouns: "she/her", image: "/team/paige.webp" },
+        { role: "Marketing & Branch Coordinator", name: "Lucie Bure", pronouns: "she/her", image: "/team/avatarPlaceholder.png" },
     ],
     website: [
         { role: "Full-Stack Developer", name: "Murad Novruzov", pronouns: "he/him", image: "/team/murad.webp" },
         { role: "Full-Stack Developer", name: "Daniel Zoubarev", pronouns: "he/him", image: "/team/daniel.webp" },
         { role: "Full-Stack Developer", name: "Rhea Talwar", pronouns: "she/her", image: "/team/rhea.webp" },
-        { role: "Website Content Coordinator", name: "Julie Burke", pronouns: "she/her", image: "/team/julie.webp" },
     ],
     content: [
         { role: "Newsletter Content Creator", name: "Gianluca Caporicci", pronouns: "he/him", image: "/team/gianluca.webp" },
