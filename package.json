@@ -43,7 +43,7 @@
         "graphql": "^16.8.1",
         "next": "15.5.7",
         "nextjs-toploader": "^3.7.15",
-        "payload": "^3.35.1",
+        "payload": "^3.74.0",
         "payload-sentinel": "^0.1.1",
         "react": "19.0.0",
         "react-dom": "19.0.0",
