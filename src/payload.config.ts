@@ -145,34 +145,4 @@ export default buildConfig({
         }),
         payloadSentinel(),
     ],
-
-    /*onInit: async (payloadInstance) => {
-  try {
-    const { totalDocs } = await payloadInstance.find({
-      collection: "users",
-      where: {
-        email: { equals: "admin@example.com" },
-      },
-    });
-
-    if (totalDocs > 0) {
-      console.log("Admin user already exists.");
-      return;
-    }
-
-    console.log("Creating admin user...");
-    await payloadInstance.create({
-      collection: "users",
-      data: {
-        fullName: "Admin User",
-        email: "admin@example.com",
-        password: "test1234",
-        role: "admin", // keep if this field exists in your schema
-      },
-    });
-    console.log("Created initial admin user.");
-  } catch (err) {
-    console.error("Error creating admin user:", err);
-  }
-}*/
 });
