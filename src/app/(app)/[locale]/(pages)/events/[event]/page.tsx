@@ -90,7 +90,11 @@ export default async function EventPage({ params }: PageProps) {
                                 <FiCalendar className="h-5 w-5 text-cTextOffset" />
                                 <h2 className="text-lg font-semibold text-cText">Date & Time</h2>
                             </div>
-                            <div className="space-y-2">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
+                            <div className="space-y-2">
+                                {event.dateRanges?.map((range, index) => (
+                                    <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />
+                                ))}
+                            </div>
                         </div>
 
                         {/* Location */}

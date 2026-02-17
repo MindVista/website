@@ -1,5 +1,5 @@
 import TeamSection from "./components/TeamSection";
-import Hr from "../../components/Hr";
+import Hr from "../../../components/Hr";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";

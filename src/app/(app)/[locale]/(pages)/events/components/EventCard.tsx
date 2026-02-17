@@ -39,7 +39,11 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                         <p className="-mb-2 text-xs font-semibold">{isOngoing ? "Ongoing" : "Upcoming"}</p>
                         <h3 className={`${titleClassName} block overflow-hidden text-ellipsis whitespace-nowrap pr-8`}>{event.title}</h3>
 
-                        <div className="text-xs">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact />)}</div>
+                        <div className="text-xs">
+                            {event.dateRanges?.map((range, index) => (
+                                <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact />
+                            ))}
+                        </div>
                     </div>
 
                     <div className="mt-auto space-y-1">
@@ -72,7 +76,11 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                         )}
                     </div>
 
-                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
+                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>
+                        {event.dateRanges?.map((range, index) => (
+                            <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />
+                        ))}
+                    </div>
 
                     <div className={`flex flex-col gap-2 ${variant === "featured" ? "text-base" : "text-sm"}`}>
                         <p className="font-medium text-cTextOffset">📍 {event.location}</p>

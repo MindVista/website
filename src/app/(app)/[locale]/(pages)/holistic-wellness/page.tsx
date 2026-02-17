@@ -7,11 +7,24 @@ import { WellnessWheel } from "./components/WellnessWheel";
 import styles from "./styles.module.css";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
-import Hr from "../../components/Hr";
+import Hr from "../../../components/Hr";
 
-export default async function HolisticWellnessPage() {
+type Locale = "en" | "fr";
+
+function getLocale(locale: string): Locale {
+    return locale === "fr" ? "fr" : "en";
+}
+
+export default async function HolisticWellnessPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale: rawLocale } = await params;
+    const locale = getLocale(rawLocale);
     // fetch page content
     const content = await (await getPayloadClient()).findGlobal({ slug: "holistic-wellness" });
+    const heroContent = locale === "en" ? content?.heroContent : content?.heroContentFr;
+
+    const wwTopContent = locale === "en" ? content?.wellnessWheelTopContent : content?.wellnessWheelTopContentFr;
+
+    const wwBottomContent = locale === "en" ? content?.wellnessWheelBottomContent : content?.wellnessWheelBottomContentFr;
 
     return (
         <Fragment>
@@ -21,7 +34,7 @@ export default async function HolisticWellnessPage() {
                     {/* Hero Section */}
                     <section className={`${styles.section} ${styles.heroSection}`}>
                         <div className={`${styles.textContent} text-lg`}>
-                            <RichText data={content?.heroContent as SerializedEditorState} />
+                            <RichText data={heroContent as SerializedEditorState} />
                         </div>
                     </section>
 
@@ -31,19 +44,19 @@ export default async function HolisticWellnessPage() {
                     <section className={`${styles.section} ${styles.wheelSection}`}>
                         <div className={`${styles.card} ${styles.wheelCard}`}>
                             <div className={styles.textContent}>
-                                <RichText data={content?.wellnessWheelTopContent as SerializedEditorState} />
+                                <RichText data={wwTopContent as SerializedEditorState} />
                             </div>
                             <div className={styles.wheelContainer}>
                                 <WellnessWheel
                                     wellnessDimensions={(content?.wellnessWheelDimensions || []).map((dim) => ({
-                                        title: dim.name,
-                                        description: dim.description,
+                                        title: locale === "fr" && dim?.nameFr ? dim.nameFr : dim.name,
+                                        description: locale === "fr" && dim?.descriptionFr ? dim.descriptionFr : dim.description,
                                         color: dim.color,
                                     }))}
                                 />
                             </div>
                             <div className={styles.textContent}>
-                                <RichText data={content?.wellnessWheelBottomContent as SerializedEditorState} />
+                                <RichText data={wwBottomContent as SerializedEditorState} />
                             </div>
                         </div>
                     </section>

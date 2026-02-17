@@ -2,7 +2,7 @@ import { getPageFromCMS } from "@/lib/getPageFromCMS";
 import { Metadata } from "next";
 import { EventsProvider } from "./EventsProvider";
 import { EventsContent } from "./components/EventsContent";
-import Hr from "../../components/Hr";
+import Hr from "../../../components/Hr";
 
 export default function EventsPage() {
     return (

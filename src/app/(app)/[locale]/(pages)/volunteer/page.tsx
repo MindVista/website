@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";
 import { getPayloadClient } from "@/payloadClient";
 import { Metadata } from "next";
-import Hr from "../../components/Hr";
+import Hr from "../../../components/Hr";
 import { VolunteerCard } from "./components/VolunteerCard";
 
 export default async function VolunteerPage() {
@@ -22,7 +22,9 @@ export default async function VolunteerPage() {
                 <Hr className="mx-auto mb-12 max-w-[60vw]" />
 
                 <div className="flex flex-col space-y-10 sm:space-y-12">
-                    {content.positions?.map((position) => <VolunteerCard key={position.id || ""} {...position} />)}
+                    {content.positions?.map((position) => (
+                        <VolunteerCard key={position.id || ""} {...position} />
+                    ))}
                     {(!content.positions || content.positions.length === 0) && <p className="text-center text-lg text-cTextOffset sm:text-xl">No volunteer positions are currently available. Please check back later!</p>}
                 </div>
             </div>

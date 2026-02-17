@@ -9,6 +9,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTiktok } from "react-icons/fa";
 import { SocialMediaLink } from "../SocialMediaLink";
+import LocaleLink from "../LocaleLink";
 
 export default function NavBar() {
     const [nav, setNav] = useState(false);
@@ -133,37 +134,37 @@ interface NavLinksProps {
 function NavLinks(props: NavLinksProps) {
     return (
         <nav className={`${props.className} flex flex-${props.flexDirection} font-semibold text-cAccent dark:text-cSoftWhite`}>
-            <Link href="/" className="inline-block transition-transform hover:scale-110">
+            <LocaleLink href="/" className="inline-block transition-transform hover:scale-110">
                 Home
-            </Link>
-            <Link href="/about" className="inline-block transition-transform hover:scale-110">
+            </LocaleLink>
+            <LocaleLink href="/about" className="inline-block transition-transform hover:scale-110">
                 About
-            </Link>
-            <Link href="/holistic-wellness" className="inline-block transition-transform hover:scale-110">
+            </LocaleLink>
+            <LocaleLink href="/holistic-wellness" className="inline-block transition-transform hover:scale-110">
                 <span className="flex gap-1 max-lg:flex-col max-lg:leading-9">
                     <span>Holistic</span>
                     <span>Wellness</span>
                 </span>
-            </Link>
-            <Link href="/directory" className="inline-block transition-transform hover:scale-110">
+            </LocaleLink>
+            <LocaleLink href="/directory" className="inline-block transition-transform hover:scale-110">
                 Directory
-            </Link>
-            <Link href="/events" className="inline-block transition-transform hover:scale-110">
+            </LocaleLink>
+            <LocaleLink href="/events" className="inline-block transition-transform hover:scale-110">
                 Events
-            </Link>
+            </LocaleLink>
         </nav>
     );
 }
 
 function LogoButton() {
     return (
-        <Link href="/" className="flex flex-row gap-2 text-left text-cAccent transition-transform hover:scale-110">
+        <LocaleLink href="/" className="flex flex-row gap-2 text-left text-cAccent transition-transform hover:scale-110">
             <Image width={164} height={164} className="max-w-12 rounded-full border-4 border-cAccent bg-cAccent dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt="MindVista Logo" priority />
 
             <div className="flex flex-col max-lg:hidden dark:text-white">
                 <h1 className="text-lg font-bold">MINDVISTA</h1>
                 <p className="-mt-1 text-[0.6rem] font-bold leading-[0.5rem]">Your wellness journey starts here.</p>
             </div>
-        </Link>
+        </LocaleLink>
     );
 }
