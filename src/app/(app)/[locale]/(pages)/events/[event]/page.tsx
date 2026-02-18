@@ -1,20 +1,22 @@
-import { RefreshRouteOnSave } from "@/app/(app)/components/RefreshRouteOnSave";
+import { RefreshRouteOnSave } from "../../../../components/RefreshRouteOnSave";
 import { Fragment } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPayloadClient } from "@/payloadClient";
+import { getPayloadClient } from "../../../../../../payloadClient";
 import Link from "next/link";
 import { FiArrowLeft, FiCalendar, FiMapPin, FiGift, FiExternalLink, FiInstagram } from "react-icons/fi";
-import LastUpdatedSection from "@/app/(app)/components/LastUpdatedSection";
+import LastUpdatedSection from "../../../../components/LastUpdatedSection";
 import LocationButton from "./components/LocationButton";
-import Hr from "@/app/(app)/components/Hr";
+import Hr from "../../../../components/Hr";
 import { OngoingBadge } from "../components/OngoingBadge";
 import { EventDate } from "../components/EventDate";
-import ImageModal from "@/app/(app)/components/ImageModal";
+import ImageModal from "../../../../components/ImageModal";
+import { getLocale } from "../../../../../../lib/i18n";
 
 type PageProps = {
     params: Promise<{
         event: string;
+        locale: string;
     }>;
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
@@ -45,7 +47,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function EventPage({ params }: PageProps) {
     const event = await getEvent((await params).event);
-    if (!event) return notFound();
+    const locale = await getLocale((await params).locale);
+    if (!event || !locale) return notFound();
 
     const now = new Date();
     const isOngoing = event.dateRanges?.some((range) => new Date(range.startDate) <= now && new Date(range.endDate) >= now);
@@ -90,11 +93,7 @@ export default async function EventPage({ params }: PageProps) {
                                 <FiCalendar className="h-5 w-5 text-cTextOffset" />
                                 <h2 className="text-lg font-semibold text-cText">Date & Time</h2>
                             </div>
-                            <div className="space-y-2">
-                                {event.dateRanges?.map((range, index) => (
-                                    <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />
-                                ))}
-                            </div>
+                            <div className="space-y-2">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
                         </div>
 
                         {/* Location */}

@@ -8,9 +8,10 @@ import Image from "next/image";
 
 interface NavigationControllerProps {
     hasAnnouncement?: boolean;
+    locale: Locale;
 }
 
-export default function NavigationController({ hasAnnouncement }: NavigationControllerProps) {
+export default function NavigationController({ hasAnnouncement, locale }: NavigationControllerProps) {
     const [showMainNav, setShowMainNav] = useState(false);
 
     useEffect(() => {
@@ -36,7 +37,7 @@ export default function NavigationController({ hasAnnouncement }: NavigationCont
                 <LandingNavBarDesktop hasAnnouncement={hasAnnouncement} />
             </div>
             <div className={`absolute left-0 top-0 w-full transform transition-all duration-300 ${showMainNav ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-100%] opacity-0"}`}>
-                <NavBar />
+                <NavBar locale={locale} />
             </div>
         </div>
     );
@@ -44,6 +45,8 @@ export default function NavigationController({ hasAnnouncement }: NavigationCont
 
 import { FaInstagram, FaTiktok } from "react-icons/fa";
 import { SocialMediaLink } from "../SocialMediaLink";
+import { Locale } from "../../../../lib/i18n";
+import { useTranslations } from "../../../../lib/TranslationProvider";
 
 function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }) {
     const socialLinks = [
@@ -59,6 +62,7 @@ function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }
         },
     ];
 
+    const t = useTranslations();
     return (
         <header>
             <div className={`fixed z-20 flex w-full flex-row items-center px-20 text-cAccent xl:px-28 2xl:px-32 dark:text-cSoftWhite ${hasAnnouncement ? "pb-10 pt-16 xl:pb-12 xl:pt-20 2xl:pb-14 2xl:pt-24" : "py-10 xl:py-12 2xl:py-14"}`}>
@@ -69,10 +73,10 @@ function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }
                         ))}
                     </div>
                     <Link href="/" className="transition-transform duration-200 hover:scale-110">
-                        Home
+                        {t("nav.home")}
                     </Link>
                     <Link href="/about" className="transition-transform duration-200 hover:scale-110">
-                        About
+                        {t("nav.about")}
                     </Link>
                 </nav>
 
@@ -84,10 +88,10 @@ function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }
 
                 <nav className="flex w-2/5 flex-row justify-end gap-10 text-lg font-semibold xl:gap-14 2xl:gap-20">
                     <Link href="/directory" className="transition-transform duration-200 hover:scale-110">
-                        Directory
+                        {t("nav.directory")}
                     </Link>
                     <Link href="/events" className="transition-transform duration-200 hover:scale-110">
-                        Events
+                        {t("nav.events")}
                     </Link>
                     <ThemeSwitcher />
                 </nav>

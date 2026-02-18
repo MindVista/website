@@ -3,6 +3,7 @@ import Link from "next/link";
 import EntityCount from "./components/EntityCount";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";
 import { Metadata } from "next";
+import LocaleLink from "@/app/(app)/components/LocaleLink";
 
 export default function DirectoryPage() {
     return (
@@ -14,7 +15,7 @@ export default function DirectoryPage() {
 
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                 {/* Clubs Card */}
-                <Link href="/directory/clubs" className="block rounded-lg border border-cBorder bg-cBackgroundOffset p-8 shadow-lg transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-800 dark:hover:shadow-blue-950/50">
+                <LocaleLink href="/directory/clubs" className="block rounded-lg border border-cBorder bg-cBackgroundOffset p-8 shadow-lg transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-800 dark:hover:shadow-blue-950/50">
                     <div className="mb-4 flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-cText md:text-3xl">Clubs</h2>
                         <span className="rounded-full bg-cBackgroundOffsetAccent px-3 py-1 text-sm font-medium text-cText md:px-4 md:py-2 md:text-base">
@@ -30,10 +31,10 @@ export default function DirectoryPage() {
                             <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
                         </svg>
                     </span>
-                </Link>
+                </LocaleLink>
 
                 {/* Resources Card */}
-                <Link href="/directory/resources" className="block rounded-lg border border-cBorder bg-cBackgroundOffset p-8 shadow-lg transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-800 dark:hover:shadow-blue-950/50">
+                <LocaleLink href="/directory/resources" className="block rounded-lg border border-cBorder bg-cBackgroundOffset p-8 shadow-lg transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-800 dark:hover:shadow-blue-950/50">
                     <div className="mb-4 flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-cText md:text-3xl">Resources</h2>
                         <span className="rounded-full bg-cBackgroundOffsetAccent px-3 py-1 text-sm font-medium text-cText md:px-4 md:py-2 md:text-base">
@@ -49,7 +50,7 @@ export default function DirectoryPage() {
                             <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
                         </svg>
                     </span>
-                </Link>
+                </LocaleLink>
             </div>
         </div>
     );

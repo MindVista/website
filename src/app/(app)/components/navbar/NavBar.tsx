@@ -10,8 +10,15 @@ import { usePathname } from "next/navigation";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaTiktok } from "react-icons/fa";
 import { SocialMediaLink } from "../SocialMediaLink";
 import LocaleLink from "../LocaleLink";
+import LanguageSwitcher from "../LanguageSwitcher";
+import { Locale } from "../../../../lib/i18n";
+import { useTranslations } from "../../../../lib/TranslationProvider";
 
-export default function NavBar() {
+interface NavBarProps {
+    locale: Locale;
+}
+
+export default function NavBar({ locale }: NavBarProps) {
     const [nav, setNav] = useState(false);
     const pathname = usePathname();
 
@@ -132,13 +139,14 @@ interface NavLinksProps {
     className?: string;
 }
 function NavLinks(props: NavLinksProps) {
+    const t = useTranslations();
     return (
         <nav className={`${props.className} flex flex-${props.flexDirection} font-semibold text-cAccent dark:text-cSoftWhite`}>
             <LocaleLink href="/" className="inline-block transition-transform hover:scale-110">
-                Home
+                {t("nav.home")}
             </LocaleLink>
             <LocaleLink href="/about" className="inline-block transition-transform hover:scale-110">
-                About
+                {t("nav.about")}
             </LocaleLink>
             <LocaleLink href="/holistic-wellness" className="inline-block transition-transform hover:scale-110">
                 <span className="flex gap-1 max-lg:flex-col max-lg:leading-9">
@@ -147,10 +155,10 @@ function NavLinks(props: NavLinksProps) {
                 </span>
             </LocaleLink>
             <LocaleLink href="/directory" className="inline-block transition-transform hover:scale-110">
-                Directory
+                {t("nav.directory")}
             </LocaleLink>
             <LocaleLink href="/events" className="inline-block transition-transform hover:scale-110">
-                Events
+                {t("nav.events")}
             </LocaleLink>
         </nav>
     );

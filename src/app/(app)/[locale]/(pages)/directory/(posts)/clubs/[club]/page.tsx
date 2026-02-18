@@ -13,9 +13,11 @@ import ContactSection from "../../components/ContactSection";
 import PostHeader from "../../components/PostHeader";
 import LastUpdatedSection from "../../../../../../components/LastUpdatedSection";
 import ImageModal from "@/app/(app)/components/ImageModal";
+import { getLocale } from "@/lib/i18n";
 
 interface Props {
     params: Promise<{
+        locale: string;
         club: string;
     }>;
     searchParams: Promise<{
@@ -25,6 +27,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const club = await getClub((await params).club);
+
     if (!club) return { title: "404: Page Not Found" };
 
     return {
@@ -49,18 +52,21 @@ async function getClub(slug: string): Promise<Club | null> {
 
 export default async function ClubPage({ params }: Props) {
     const club = await getClub((await params).club);
+    const locale = await getLocale((await params).locale);
     if (!club) return notFound();
 
     const tags = club.tags?.map((tag: number | { id: string | number; name?: string }) => (typeof tag === "number" ? { id: tag, name: tag.toString() } : tag)) ?? [];
 
     const hasSocialMedia = club.facebook || club.instagram || (club.otherSocials && club.otherSocials.length > 0);
 
+    const title = locale === "fr" && club?.titleFr ? club.titleFr : club.title;
+    const description = locale === "fr" && club?.descriptionFr ? club.descriptionFr : club.description;
     return (
         <Fragment>
             <RefreshRouteOnSave />
             <PostHeader
-                title={club.title}
-                description={club.description}
+                title={title}
+                description={description}
                 status={{
                     isActive: club.currentlyActive || false,
                     label: club.currentlyActive ? "Active" : "Inactive",

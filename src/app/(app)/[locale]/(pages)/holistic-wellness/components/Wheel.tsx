@@ -1,5 +1,6 @@
 import React from "react";
 import { Slice } from "./Slice";
+import { useTranslations } from "@/lib/TranslationProvider";
 
 /**
  * props for the wheel component
@@ -37,6 +38,7 @@ export const Wheel: React.FC<WheelProps> = ({ radius = 200, className = "", slic
     const viewBoxSize = radius * 2;
     const center = viewBoxSize / 2;
     const centerRadius = radius * 0.45;
+    const t = useTranslations();
 
     return (
         // SVG element with dynamic view box size and class name
@@ -69,7 +71,7 @@ export const Wheel: React.FC<WheelProps> = ({ radius = 200, className = "", slic
                         {activeIndex === null ? (
                             // default content when no slice is active
                             <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full p-4 text-center">
-                                <p className="font-medium text-black">{isTouch ? "Tap a section to learn more!" : "Hover over a section to learn more!"}</p>
+                                <p className="font-medium text-black">{isTouch ? t("wellnesswheel.tap") : t("wellnesswheel.hover")}</p>
                             </div>
                         ) : (
                             // content when a slice is active

@@ -1,13 +1,11 @@
-const locales = ["en", "fr"] as const;
-type Locale = (typeof locales)[number];
-
-function getLocale(locale: string): Locale {
-    return locale === "fr" ? "fr" : "en";
-}
+import { getMessages } from "@/lib/getMessages";
+import { getLocale } from "@/lib/i18n";
+import { TranslationProvider } from "@/lib/TranslationProvider";
 
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
     const { locale: rawLocale } = await params;
     const locale = getLocale(rawLocale);
+    const messages = await getMessages(locale);
 
-    return children;
+    return <TranslationProvider messages={messages}>{children}</TranslationProvider>;
 }

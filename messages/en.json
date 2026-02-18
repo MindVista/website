@@ -1,0 +1,15 @@
+{
+    "nav.home": "Home",
+    "nav.about": "About",
+    "nav.directory": "Directory",
+    "nav.events": "Events",
+    "status.active": "Active",
+    "status.inactive": "Inactive",
+
+    "wellnesswheel.tap": "Tap a section to learn more!",
+    "wellnesswheel.hover": "Hover over a section to learn more!",
+
+    "crisis.dial": "DIAL",
+    "crisis.youorother": "If you or someone else is in",
+    "crisis.imm_danger": "immediate danger"
+}

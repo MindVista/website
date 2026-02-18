@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, Suspense } from "react";
 import { usePathname } from "next/navigation";
-import { ClubTag, ResourceTag, ClubTagCategory, ResourceTagCategory, Club, Resource } from "../../../../../payload-types";
+import { ClubTag, ResourceTag, ClubTagCategory, ResourceTagCategory, Club, Resource } from "../../../../../../payload-types";
 import { fetchDirectoryData } from "./actions";
 import { DirectoryItemBoxSkeleton } from "./components/skeletons/DirectoryItemBoxSkeleton";
 import { FiltersSkeleton } from "./components/skeletons/FiltersSkeleton";

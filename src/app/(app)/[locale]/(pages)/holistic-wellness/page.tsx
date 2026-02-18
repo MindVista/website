@@ -1,25 +1,21 @@
-import { RefreshRouteOnSave } from "@/app/(app)/components/RefreshRouteOnSave";
+import { RefreshRouteOnSave } from "../../../components/RefreshRouteOnSave";
 import { Fragment } from "react";
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
-import { getPayloadClient } from "@/payloadClient";
+import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
+import { getPayloadClient } from "../../../../../payloadClient";
 import { Metadata } from "next";
 import { WellnessWheel } from "./components/WellnessWheel";
 import styles from "./styles.module.css";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import Hr from "../../../components/Hr";
-
-type Locale = "en" | "fr";
-
-function getLocale(locale: string): Locale {
-    return locale === "fr" ? "fr" : "en";
-}
+import { getLocale } from "../../../../..//lib/i18n";
 
 export default async function HolisticWellnessPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale: rawLocale } = await params;
     const locale = getLocale(rawLocale);
     // fetch page content
     const content = await (await getPayloadClient()).findGlobal({ slug: "holistic-wellness" });
+
     const heroContent = locale === "en" ? content?.heroContent : content?.heroContentFr;
 
     const wwTopContent = locale === "en" ? content?.wellnessWheelTopContent : content?.wellnessWheelTopContentFr;
@@ -69,7 +65,7 @@ export default async function HolisticWellnessPage({ params }: { params: Promise
                             {content?.sections?.map((section, index) => (
                                 <article key={index} className={styles.card}>
                                     <div className={styles.textContent}>
-                                        <RichText data={section.content as SerializedEditorState} />
+                                        <RichText data={locale === "fr" ? (section?.contentFr as SerializedEditorState) : (section.content as SerializedEditorState)} />
                                     </div>
                                 </article>
                             ))}

@@ -8,7 +8,7 @@ import Image from "next/image";
 import HomeEventsSection from "../components/index/HomeEventsSection";
 import { AnnouncementBar } from "../components/AnnouncementBar";
 
-import lightThemeImage from "@public/landing/shifaaz-shamoon.webp";
+import lightThemeImage from "../../../../public/landing/shifaaz-shamoon.webp";
 import darkThemeImage from "@public/landing/jon-j_mk18.webp";
 
 import { TbStretching2, TbHeartHandshake, TbCirclesRelation, TbApple, TbZzz, TbUserCheck } from "react-icons/tb";
@@ -17,21 +17,22 @@ import Link from "next/link";
 import InfoSeparator from "../components/index/InfoSeparator";
 import { getPayloadClient } from "@/payloadClient";
 import { SponsorLogos } from "./(pages)/sponsor/components/SponsorLogos";
+import { getLocale } from "@/lib/i18n";
 
-export default async function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
     // fetch data
     const payload = await getPayloadClient();
     const sponsorData = await payload.findGlobal({ slug: "sponsor" });
     const announcementData = await payload.findGlobal({ slug: "announcement-bar" });
-
+    const locale = getLocale((await params).locale);
     return (
         <>
             <div className="max-lg:hidden">
                 <AnnouncementBar {...announcementData} />
-                <NavigationController hasAnnouncement={announcementData.isEnabled} />
+                <NavigationController hasAnnouncement={announcementData.isEnabled} locale={locale} />
             </div>
             <div className="lg:hidden">
-                <NavBar />
+                <NavBar locale={locale} />
             </div>
             <main className="flex min-h-screen flex-col [&_h2]:tracking-tighter [&_p]:tracking-tight">
                 {/* TOP SECTION START */}

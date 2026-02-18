@@ -1,9 +1,17 @@
 import { Metadata } from "next";
 // import Hr from "../../components/Hr";
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
 import Link from "next/link";
+import { getMessages } from "@/lib/getMessages";
+import { getLocale } from "@/lib/i18n";
 
-export default function CrisisPage() {
+interface CrisisPageProps {
+    params: { locale: string };
+}
+
+export default async function CrisisPage({ params }: CrisisPageProps) {
+    const locale = await getLocale(params.locale);
+    const messages = getMessages(locale);
     return (
         <div className="container mx-auto max-w-4xl px-4 py-8">
             {/* Emergency Number Section */}

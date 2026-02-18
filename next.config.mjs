@@ -45,4 +45,5 @@ const nextConfig = {
     },
 };
 
+// compose plugins: next-intl FIRST, then payload
 export default withPayload(nextConfig);

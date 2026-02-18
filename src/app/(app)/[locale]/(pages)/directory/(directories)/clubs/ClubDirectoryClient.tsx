@@ -4,15 +4,20 @@ import React from "react";
 import { useDirectory } from "../DirectoryProvider";
 import { Club } from "@/payload-types";
 import { DirectoryItemBox } from "../components/DirectoryItemBox";
+import { Locale } from "@/lib/i18n";
 
-export default function ClubDirectoryClient() {
+interface ClubDirectoryProps {
+    locale: Locale;
+}
+
+export default function ClubDirectoryClient({ locale }: ClubDirectoryProps) {
     const { filteredItems } = useDirectory();
     const clubs = filteredItems as Club[];
 
     return (
         <>
             {clubs.map((club) => (
-                <DirectoryItemBox key={club.id} item={club} type="clubs" />
+                <DirectoryItemBox key={club.id} item={club} type="clubs" locale={locale} />
             ))}
         </>
     );

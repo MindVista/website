@@ -1,6 +1,6 @@
 "use client";
 
-import Hr from "@/app/(app)/components/Hr";
+import Hr from "../../../../components/Hr";
 import { useEvents } from "../EventsProvider";
 import { EventsList } from "./EventsList";
 

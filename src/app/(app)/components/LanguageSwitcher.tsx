@@ -1,23 +1,19 @@
 "use client";
-import { usePathname } from "next/navigation";
 
-export default function LanguageSwitcher({ currentLocale }: { currentLocale: "en" | "fr" }) {
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { Locale } from "@/lib/i18n";
+
+export default function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
     const pathname = usePathname();
-    const locales: ("en" | "fr")[] = ["en", "fr"];
+    const router = useRouter();
 
-    function switchLocale(newLocale: "en" | "fr") {
+    function switchLocale(newLocale: Locale) {
         const segments = pathname.split("/");
         segments[1] = newLocale;
-        return segments.join("/");
+        router.push(segments.join("/"));
+
+        document.cookie = `locale=${newLocale}; path=/; max-age=31536000`;
     }
 
-    return (
-        <div className="flex gap-2">
-            {locales.map((loc) => (
-                <a key={loc} href={switchLocale(loc)} className={loc === currentLocale ? "font-bold" : ""}>
-                    {loc.toUpperCase()}
-                </a>
-            ))}
-        </div>
-    );
+    return <button onClick={() => switchLocale(currentLocale === "en" ? "fr" : "en")}>{currentLocale === "en" ? "FR" : "EN"}</button>;
 }

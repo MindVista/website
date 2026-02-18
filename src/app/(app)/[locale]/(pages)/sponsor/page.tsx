@@ -1,10 +1,10 @@
-import { RefreshRouteOnSave } from "@/app/(app)/components/RefreshRouteOnSave";
+import { RefreshRouteOnSave } from "../../../components/RefreshRouteOnSave";
 import { Fragment } from "react";
 import { Metadata } from "next";
 import ContactForm from "../contact/components/ContactForm/ContactForm";
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
 import Hr from "../../../components/Hr";
-import { getPayloadClient } from "@/payloadClient";
+import { getPayloadClient } from "../../../../../payloadClient";
 import { SponsorLogos } from "./components/SponsorLogos";
 
 export default async function SponsorPage() {

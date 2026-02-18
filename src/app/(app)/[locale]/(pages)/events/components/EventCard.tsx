@@ -3,10 +3,13 @@ import Link from "next/link";
 import { EventDate } from "./EventDate";
 import { OngoingBadge } from "./OngoingBadge";
 import { OngoingPulse } from "./OngoingPulse";
+import LocaleLink from "@/app/(app)/components/LocaleLink";
+import { Locale } from "node_modules/next/dist/compiled/@vercel/og/satori";
 
 interface EventCardProps {
     event: Event;
     variant?: "default" | "featured" | "compactDefault" | "compactFeatured";
+    locale: Locale;
 }
 
 export function EventCard({ event, variant = "default" }: EventCardProps) {
@@ -28,7 +31,7 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
 
     if (isCompact) {
         return (
-            <Link href={`/events/${event.slug}`} className={cardClassName}>
+            <LocaleLink href={`/events/${event.slug}`} className={cardClassName}>
                 {isOngoing && (
                     <div className="absolute right-3 top-3 transform-gpu">
                         <OngoingPulse />
@@ -39,11 +42,7 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                         <p className="-mb-2 text-xs font-semibold">{isOngoing ? "Ongoing" : "Upcoming"}</p>
                         <h3 className={`${titleClassName} block overflow-hidden text-ellipsis whitespace-nowrap pr-8`}>{event.title}</h3>
 
-                        <div className="text-xs">
-                            {event.dateRanges?.map((range, index) => (
-                                <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact />
-                            ))}
-                        </div>
+                        <div className="text-xs">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact />)}</div>
                     </div>
 
                     <div className="mt-auto space-y-1">
@@ -59,12 +58,12 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                         )}
                     </div>
                 </div>
-            </Link>
+            </LocaleLink>
         );
     }
 
     return (
-        <Link href={`/events/${event.slug}`} className={cardClassName}>
+        <LocaleLink href={`/events/${event.slug}`} className={cardClassName}>
             <div className={`space-y-3 ${variant === "featured" ? "space-y-6" : ""}`}>
                 <div className="space-y-2">
                     <div className="flex justify-between">
@@ -76,11 +75,7 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                         )}
                     </div>
 
-                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>
-                        {event.dateRanges?.map((range, index) => (
-                            <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />
-                        ))}
-                    </div>
+                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
 
                     <div className={`flex flex-col gap-2 ${variant === "featured" ? "text-base" : "text-sm"}`}>
                         <p className="font-medium text-cTextOffset">📍 {event.location}</p>
@@ -102,6 +97,6 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
 
                 {variant === "featured" && <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />}
             </div>
-        </Link>
+        </LocaleLink>
     );
 }
