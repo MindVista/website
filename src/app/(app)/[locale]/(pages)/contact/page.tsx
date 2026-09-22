@@ -4,8 +4,13 @@ import ContactForm from "./components/ContactForm/ContactForm";
 import { getPageFromCMS } from "@/lib/getPageFromCMS";
 import { FaFacebook, FaInstagram, FaTiktok, FaLinkedin, FaGithub } from "react-icons/fa";
 import { SocialMediaLink } from "../../../components/SocialMediaLink";
+import { getTranslator } from "@/lib/getTranslator";
+import { getLocale } from "@/lib/i18n";
+import LocaleLink from "@/app/(app)/components/LocaleLink";
 
-export default function ContactPage() {
+export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
+    const locale = getLocale((await params).locale);
+    const t = await getTranslator(locale);
     const socialLinks = [
         {
             href: "https://facebook.com/mindvista.mcgill",
@@ -38,19 +43,19 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-4xl px-6 py-12 sm:px-4">
             {/* Header Section */}
             <div className="mb-12 text-center">
-                <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">Contact Us</h1>
-                <p className="mx-auto max-w-2xl text-xl font-medium leading-tight tracking-tight text-black dark:text-white">Have questions or feedback? We&apos;re here to listen and help. Your mental health journey matters to us.</p>
+                <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">{t("footer.contact_us")}</h1>
+                <p className="mx-auto max-w-2xl text-xl font-medium leading-tight tracking-tight text-black dark:text-white">{locale == "fr" ? "Vous avez des questions ou des commentaires ? Nous sommes là pour vous écouter et vous aider. Votre parcours en matière de santé mentale nous tient à cœur." : "Have questions or feedback? We're here to listen and help. Your mental health journey matters to us"}</p>
             </div>
 
             {/* Contact Form Section */}
             <div className="mx-auto">
-                <ContactForm />
+                <ContactForm locale={locale} />
             </div>
 
             {/* Additional Contact Info */}
             <div className="mt-16 text-center">
-                <h2 className="mb-4 text-2xl font-semibold text-cText">Other Ways to Reach Us</h2>
-                <p className="mb-5 font-medium text-cTextOffset">If you prefer other methods of communication or need immediate assistance:</p>
+                <h2 className="mb-4 text-2xl font-semibold text-cText">{t("contact.ways")}</h2>
+                <p className="mb-5 font-medium text-cTextOffset">{t("contact.prefer")}</p>
 
                 {/* SOCIAL MEDIA ICONS */}
                 <div className="mb-6 flex items-center justify-center gap-4">
@@ -62,22 +67,22 @@ export default function ContactPage() {
                 <div className="mx-auto grid max-w-2xl gap-6 md:grid-cols-2">
                     {/* EMERGENCY SUPPORT */}
                     <div className="rounded-lg bg-cBackgroundOffset p-6">
-                        <h3 className="mb-2 text-lg font-semibold text-cText">Emergency Support</h3>
+                        <h3 className="mb-2 text-lg font-semibold text-cText">{t("contact.support")}</h3>
                         <p className="text-cTextOffset">
-                            If you&apos;re in crisis, please visit our
-                            <Link href="/crisis" className="text-cAccent hover:opacity-80">
+                            {t("contact.visit")}
+                            <LocaleLink href="/crisis" className="text-cAccent hover:opacity-80">
                                 {" "}
-                                emergency resources{" "}
-                            </Link>
-                            page.
+                                {t("contact.emergency_resources")}{" "}
+                            </LocaleLink>
+                            {t("contact.page")}
                         </p>
                     </div>
 
                     {/* GENERAL INQUIRIES */}
                     <div className="rounded-lg bg-cBackgroundOffset p-6">
-                        <h3 className="mb-2 text-lg font-semibold text-cText">General Inquiries</h3>
+                        <h3 className="mb-2 text-lg font-semibold text-cText">{t("contact.inquiries")}</h3>
                         <p className="text-cTextOffset">
-                            For general questions, email us at{" "}
+                            {t("contact.email")}{" "}
                             <Link href="mailto:mindvista.mcgill@gmail.com" className="text-cAccent hover:opacity-80">
                                 mindvista.mcgill@gmail.com
                             </Link>

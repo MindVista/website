@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function EventPage({ params }: PageProps) {
     const event = await getEvent((await params).event);
-    const locale = await getLocale((await params).locale);
+    const locale = getLocale((await params).locale);
     if (!event || !locale) return notFound();
 
     const now = new Date();

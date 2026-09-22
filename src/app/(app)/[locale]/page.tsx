@@ -18,6 +18,8 @@ import InfoSeparator from "../components/index/InfoSeparator";
 import { getPayloadClient } from "@/payloadClient";
 import { SponsorLogos } from "./(pages)/sponsor/components/SponsorLogos";
 import { getLocale } from "@/lib/i18n";
+import LocaleLink from "../components/LocaleLink";
+import { getTranslator } from "@/lib/getTranslator";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
     // fetch data
@@ -25,6 +27,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     const sponsorData = await payload.findGlobal({ slug: "sponsor" });
     const announcementData = await payload.findGlobal({ slug: "announcement-bar" });
     const locale = getLocale((await params).locale);
+    const t = await getTranslator(locale);
     return (
         <>
             <div className="max-lg:hidden">
@@ -62,8 +65,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                         {/* Quote */}
                         <div className="text-md absolute bottom-[20vh] right-[10vw] z-10 max-w-[20vw] text-[2vh] font-semibold text-[#1D1D1B] dark:text-slate-100">
-                            <p>Mental wellness is an active process that helps us to build resilience, grow, and flourish.</p>
-                            <p className="text-[#1D1D1B]/60 dark:text-slate-400">&mdash; Global Wellness Institute</p>
+                            <p>{t("home.quote")}</p>
+                            <p className="text-[#1D1D1B]/60 dark:text-slate-400">&mdash; {t("home.gwi")}</p>
                         </div>
                     </div>
 
@@ -79,12 +82,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 {/* FIRST SECTION */}
                 <section className="px-[5vw] pb-12 pt-[10vh] text-center md:px-[7.5vw] lg:px-[10vw]">
                     <h2 className="text-5xl font-bold md:text-6xl">
-                        The One-Stop-Shop for <span className="text-cAccent">Wellness</span> and <span className="text-cAccent">Engagement</span> at McGill.
+                        {t("home.one_stop_shop")} <span className="text-cAccent">{t("wellness")}</span> {t("and")} <span className="text-cAccent">{t("engagement")}</span> {t("at McGill")}.
                     </h2>
 
                     <p className="py-6 text-xl font-medium text-cTextOffset md:px-20 lg:px-28">
-                        Welcome to <span className="font-semibold text-cAccent dark:text-mindvista-50">MindVista</span>, an innovative student-led initiative at McGill University committed to enhancing student wellness and engagement.
-                        <span className="hidden md:inline"> Our passionate team of volunteers is devoted to regularly updating our website to simplify the process of accessing essential resources for your well-being. </span>
+                        {t("home.welcome_to")} <span className="font-semibold text-cAccent dark:text-mindvista-50">MindVista</span>, {t("home.initiative")}
+                        <span className="hidden md:inline"> {t("home.volunteers")} </span>
                     </p>
                 </section>
                 {/* END OF FIRST SECTION */}
@@ -93,23 +96,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                 {/* MENTAL WELLNESS SECTION */}
                 <section className="px-[5vw]">
-                    <h2 className="mt-16 text-center text-3xl font-bold md:text-4xl">What is Mental Wellness?</h2>
-                    <p className="py-3 text-center text-xl font-medium text-cTextOffset md:px-20 lg:px-28">Mental wellness includes a range of factors that contribute to one&apos;s overall well-being. Achieving mental wellness is a journey which requires ongoing effort and attention. This may feel intimidating at first, however, your willingness to improve is the first step! Here is a glimpse of what achieving further mental wellness involves.</p>
+                    <h2 className="mt-16 text-center text-3xl font-bold md:text-4xl">{t("home.what_wellness")}</h2>
+                    <p className="py-3 text-center text-xl font-medium text-cTextOffset md:px-20 lg:px-28">{t("home.wellness_def")}</p>
 
                     {/* prettier-ignore */}
                     <div className="mb-8 mt-10 grid grid-cols-1 grid-rows-3 gap-4 sm:mx-6 sm:grid-cols-2 sm:grid-rows-3 lg:mx-6 xl:mx-12">
-                        <div className="p-4"><MentalWellnessFact icon={TbStretching2} title="Regular Physical Activity" description="Exercise releases endorphins, enhances sleep quality, and reduces stress. A daily walk, yoga, or gym session can enhance both physical and mental resilience." /></div>
-                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbHeartHandshake} title="Healthy Relationships" description="Meaningful connections with loved ones provide emotional support, reduce feelings of loneliness, and foster a sense of community. Prioritize quality time with friends and family to strengthen these bonds." /></div>
-                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbCirclesRelation} title="Mindfulness and Stress Management" description="Practices like meditation, deep breathing, and journaling help you manage emotions, reduce anxiety, and stay focused on the present. These techniques promote a calm and centered state of mind." /></div>
-                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbApple} title="A Balanced Diet" description="A nutrient-rich diet fuels your brain and body. Consuming omega-3s, whole grains, fruits, and vegetables positively affects mood and cognitive function." /></div>
-                        <div className="p-4"><MentalWellnessFact icon={TbZzz} title="Quality Sleep" description="Restorative sleep is essential for memory, mood regulation, and decision-making. Aim for 7-9 hours per night and establish a consistent bedtime routine." /></div>
-                        <div className="p-4"><MentalWellnessFact icon={TbUserCheck} title="Professional Support" description="Therapy or counseling provides practical tools to overcome challenges and encourages personal growth. Seeking professional support is a proactive way to strengthen your mental health." /></div>
+                        <div className="p-4"><MentalWellnessFact icon={TbStretching2} title={t("home.regular_physical_activity")} description={t("home.rpa_description")} /></div>
+                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbHeartHandshake} title={t("home.healthy_relationships")} description={t("home.hr_description")} /></div>
+                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbCirclesRelation} title={t("home.mind_stress_management")} description={t("home.msm_description")} /></div>
+                        <div className="hidden p-4 sm:grid"><MentalWellnessFact icon={TbApple} title={t("home.balanced_diet")} description={t("home.bd_description")} /></div>
+                        <div className="p-4"><MentalWellnessFact icon={TbZzz} title={t("home.quality_sleep")} description={t("home.qs_description")} /></div>
+                        <div className="p-4"><MentalWellnessFact icon={TbUserCheck} title={t("home.professional_support")} description={t("home.ps_description")} /></div>
                     </div>
 
                     <div className="flex justify-center">
-                        <Link href="/holistic-wellness" className="flex items-center gap-3 rounded-lg border border-cBorder p-3 text-lg font-semibold transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
-                            Learn More <HiArrowLongRight />
-                        </Link>
+                        <LocaleLink href="/holistic-wellness" className="flex items-center gap-3 rounded-lg border border-cBorder p-3 text-lg font-semibold transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
+                            {t("learn_more")} <HiArrowLongRight />
+                        </LocaleLink>
                     </div>
                 </section>
                 {/* END OF MENTAL WELLNESS SECTION */}
@@ -121,19 +124,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                 {/* SPONSORS SECTION */}
                 <section className="mb-16 px-[5vw] md:px-[7.5vw] lg:px-[10vw]">
-                    <h2 className="text-center text-3xl font-bold md:text-4xl">Big Thanks to Our Sponsors</h2>
-                    <p className="py-3 text-center text-xl font-medium text-cTextOffset md:px-20 lg:px-28">We are incredibly grateful for the support and dedication of our sponsors who believe in our mission.</p>
+                    <h2 className="text-center text-3xl font-bold md:text-4xl">{t("home.sponsor_thanks")}</h2>
+                    <p className="py-3 text-center text-xl font-medium text-cTextOffset md:px-20 lg:px-28">{t("home.sponsor_grateful")}</p>
                     <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 items-center justify-items-center gap-8 md:grid-cols-2 md:gap-0">
                         <SponsorLogos sponsors={sponsorData.sponsors} />
                     </div>
                     <div className="mt-10 flex justify-center">
                         <Link href="/sponsor" className="flex items-center gap-3 rounded-lg border border-cBorder p-3 text-lg font-semibold transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
-                            Become a Sponsor <HiArrowLongRight />
+                            {t("home.become_sponsor")} <HiArrowLongRight />
                         </Link>
                     </div>
                 </section>
             </main>
-            <Footer />
+            <Footer locale={locale} />
         </>
     );
 }

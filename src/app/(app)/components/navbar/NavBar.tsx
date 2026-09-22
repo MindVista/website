@@ -52,8 +52,9 @@ export default function NavBar({ locale }: NavBarProps) {
                 </div>
 
                 <div className="flex flex-row gap-5 max-lg:hidden">
-                    <EmergencyButton />
+                    <EmergencyButton locale={locale} />
                     <ThemeSwitcher />
+                    <LanguageSwitcher currentLocale={locale} />
                     <div className="flex items-center gap-5">
                         {socialLinks.map((link) => (
                             <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent transition-transform hover:scale-110 dark:text-white" size="1.5rem" />
@@ -69,7 +70,7 @@ export default function NavBar({ locale }: NavBarProps) {
                 {/* MOBILE END */}
             </div>
 
-            <NavMenu nav={nav} />
+            <NavMenu nav={nav} locale={locale} />
         </header>
     );
 }
@@ -90,8 +91,9 @@ function Hamburger({ nav, setNav }: HamburgerProps) {
 
 interface NavMenuProps {
     nav: boolean;
+    locale: Locale;
 }
-function NavMenu({ nav }: NavMenuProps) {
+function NavMenu({ nav, locale }: NavMenuProps) {
     const socialLinks = [
         {
             href: "https://facebook.com/mindvista.mcgill",
@@ -123,8 +125,9 @@ function NavMenu({ nav }: NavMenuProps) {
     return (
         <div className={`navMenu fixed left-0 top-0 z-10 h-full w-full bg-cBackground transition-transform duration-300 ${nav ? "translate-x-0" : "translate-x-full"} pointer-events-auto flex flex-col items-center justify-center gap-4`}>
             <ThemeSwitcher />
+            <LanguageSwitcher currentLocale={locale} />
             <NavLinks flexDirection="col" className="gap-2 text-center text-5xl" />
-            <EmergencyButton className="mt-2" />
+            <EmergencyButton className="mt-2" locale={locale} />
             <div className="mt-3 flex items-center gap-5">
                 {socialLinks.map((link) => (
                     <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent dark:text-white" size="1.5rem" />
@@ -150,8 +153,8 @@ function NavLinks(props: NavLinksProps) {
             </LocaleLink>
             <LocaleLink href="/holistic-wellness" className="inline-block transition-transform hover:scale-110">
                 <span className="flex gap-1 max-lg:flex-col max-lg:leading-9">
-                    <span>Holistic</span>
-                    <span>Wellness</span>
+                    <span>{t("holistic")}</span>
+                    <span>{t("wellness")}</span>
                 </span>
             </LocaleLink>
             <LocaleLink href="/directory" className="inline-block transition-transform hover:scale-110">
@@ -165,13 +168,14 @@ function NavLinks(props: NavLinksProps) {
 }
 
 function LogoButton() {
+    const t = useTranslations();
     return (
         <LocaleLink href="/" className="flex flex-row gap-2 text-left text-cAccent transition-transform hover:scale-110">
             <Image width={164} height={164} className="max-w-12 rounded-full border-4 border-cAccent bg-cAccent dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt="MindVista Logo" priority />
 
             <div className="flex flex-col max-lg:hidden dark:text-white">
                 <h1 className="text-lg font-bold">MINDVISTA</h1>
-                <p className="-mt-1 text-[0.6rem] font-bold leading-[0.5rem]">Your wellness journey starts here.</p>
+                <p className="-mt-1 text-[0.6rem] font-bold leading-[0.5rem]">{t("nav.logo")}</p>
             </div>
         </LocaleLink>
     );

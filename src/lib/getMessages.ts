@@ -1,5 +1,6 @@
-import { Locale } from "./i18n";
+import { getLocale, Locale } from "./i18n";
 
 export async function getMessages(locale: Locale) {
-    return (await import(`../../messages/${locale}.json`)).default;
+    // normalize in case an undefined/unsupported locale slips through (falls back to "en")
+    return (await import(`../../messages/${getLocale(locale)}.json`)).default;
 }

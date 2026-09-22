@@ -14,7 +14,7 @@ export default async function PageLayout({ children, params }: { children: React
             <NavBar locale={locale} />
             <LanguageSwitcher currentLocale={locale} />
             <main className="pt-[10vh]">{children}</main>
-            <Footer />
+            <Footer locale={locale} />
         </>
     );
 }

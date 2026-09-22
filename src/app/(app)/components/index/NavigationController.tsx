@@ -34,7 +34,7 @@ export default function NavigationController({ hasAnnouncement, locale }: Naviga
     return (
         <div className="fixed left-0 top-0 z-20 w-full">
             <div className={`absolute left-0 top-0 w-full transform transition-all duration-300 ${showMainNav ? "pointer-events-none -translate-y-full opacity-0" : "pointer-events-auto translate-y-0 opacity-100"}`}>
-                <LandingNavBarDesktop hasAnnouncement={hasAnnouncement} />
+                <LandingNavBarDesktop hasAnnouncement={hasAnnouncement} locale={locale} />
             </div>
             <div className={`absolute left-0 top-0 w-full transform transition-all duration-300 ${showMainNav ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none translate-y-[-100%] opacity-0"}`}>
                 <NavBar locale={locale} />
@@ -47,8 +47,10 @@ import { FaInstagram, FaTiktok } from "react-icons/fa";
 import { SocialMediaLink } from "../SocialMediaLink";
 import { Locale } from "../../../../lib/i18n";
 import { useTranslations } from "../../../../lib/TranslationProvider";
+import LanguageSwitcher from "../LanguageSwitcher";
+import LocaleLink from "../LocaleLink";
 
-function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }) {
+function LandingNavBarDesktop({ hasAnnouncement, locale }: { hasAnnouncement?: boolean; locale: Locale }) {
     const socialLinks = [
         {
             href: "https://instagram.com/mindvista.mcgill/",
@@ -72,28 +74,29 @@ function LandingNavBarDesktop({ hasAnnouncement }: { hasAnnouncement?: boolean }
                             <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent transition-transform duration-200 hover:scale-110 dark:text-white" size="1.5rem" />
                         ))}
                     </div>
-                    <Link href="/" className="transition-transform duration-200 hover:scale-110">
+                    <LocaleLink href="/" className="transition-transform duration-200 hover:scale-110">
                         {t("nav.home")}
-                    </Link>
-                    <Link href="/about" className="transition-transform duration-200 hover:scale-110">
+                    </LocaleLink>
+                    <LocaleLink href="/about" className="transition-transform duration-200 hover:scale-110">
                         {t("nav.about")}
-                    </Link>
+                    </LocaleLink>
                 </nav>
 
                 <div className="flex w-1/5 justify-center">
-                    <Link href="/">
+                    <LocaleLink href="/">
                         <Image width={164} height={164} className="h-16 w-16 rounded-full border-4 border-black bg-black transition-transform duration-200 hover:scale-110 dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt="MindVista Logo" />
-                    </Link>
+                    </LocaleLink>
                 </div>
 
                 <nav className="flex w-2/5 flex-row justify-end gap-10 text-lg font-semibold xl:gap-14 2xl:gap-20">
-                    <Link href="/directory" className="transition-transform duration-200 hover:scale-110">
+                    <LocaleLink href="/directory" className="transition-transform duration-200 hover:scale-110">
                         {t("nav.directory")}
-                    </Link>
-                    <Link href="/events" className="transition-transform duration-200 hover:scale-110">
+                    </LocaleLink>
+                    <LocaleLink href="/events" className="transition-transform duration-200 hover:scale-110">
                         {t("nav.events")}
-                    </Link>
+                    </LocaleLink>
                     <ThemeSwitcher />
+                    <LanguageSwitcher currentLocale={locale} />
                 </nav>
             </div>
         </header>

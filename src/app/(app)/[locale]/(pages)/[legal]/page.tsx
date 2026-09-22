@@ -7,6 +7,7 @@ import { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import styles from "./legal.module.css";
 import { Legal, Page } from "@/payload-types";
 import { Metadata } from "next";
+import { getLocale } from "@/lib/i18n";
 
 // ISR LOGIC START -----------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export async function generateStaticParams() {
 
 interface Props {
     params: Promise<{
+        locale: string;
         legal: string;
     }>;
     searchParams: Promise<{
@@ -66,6 +68,7 @@ async function getLegalPage(slug: string): Promise<Legal | null> {
 }
 
 export default async function LegalPage({ params }: Props) {
+    const locale = getLocale((await params).locale);
     const page = await getLegalPage((await params).legal);
     if (!page) {
         notFound();
@@ -76,7 +79,7 @@ export default async function LegalPage({ params }: Props) {
             <RefreshRouteOnSave />
             <section className="rounded-xl px-[10vw] py-[10vh] md:px-[15vw] lg:px-[20vw]">
                 <article className={styles.legalContent}>
-                    <RichText data={page.content as SerializedEditorState} />
+                    <RichText data={(locale == "fr" ? page.contentFr : page.content) as SerializedEditorState} />
                 </article>
             </section>
         </Fragment>

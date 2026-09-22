@@ -6,6 +6,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import NextTopLoader from "nextjs-toploader";
 import NavBar from "./(app)/components/navbar/NavBar";
 import Footer from "./(app)/components/Footer";
+import { cookies } from "next/headers";
+import { getLocale } from "@/lib/i18n";
+import { getMessages } from "@/lib/getMessages";
+import { TranslationProvider } from "@/lib/TranslationProvider";
 
 const messages = [
     {
@@ -52,14 +56,18 @@ function NotFoundComponent() {
     );
 }
 
-export default function NotFound() {
+export default async function NotFound() {
+    // root not-found has no [locale] param, so use the cookie set by LanguageSwitcher
+    const locale = getLocale((await cookies()).get("locale")?.value ?? "");
+    const translations = await getMessages(locale);
+
     // CHANGES MUST ONLY BE MADE BELOW IF MIRRORED FROM ONE OF:
     // - src/app/(app)/(pages)/layout.tsx or
     // - src/app/(app)/layout.tsx
     // See https://github.com/MindVista/website/wiki/Miscellaneous#404-page-handling
     return (
         // APP LAYOUT START
-        <html lang="en" suppressHydrationWarning>
+        <html lang={locale} suppressHydrationWarning>
             <head>
                 <meta name="apple-mobile-web-app-title" content="MindVista" />
                 {/* TODO: social media stuff here */}
@@ -108,17 +116,19 @@ export default function NotFound() {
                 <NextTopLoader showSpinner={false} />
 
                 {/* APP LAYOUT CHILDREN START */}
-                {/* PAGES LAYOUT START */}
-                <NavBar />
+                <TranslationProvider messages={translations}>
+                    {/* PAGES LAYOUT START */}
+                    <NavBar locale={locale} />
 
-                <main className="pt-[10vh]">
-                    {/* PAGES LAYOUT CHILDREN START */}
-                    <NotFoundComponent />
-                    {/* PAGES LAYOUT CHILDREN END */}
-                </main>
+                    <main className="pt-[10vh]">
+                        {/* PAGES LAYOUT CHILDREN START */}
+                        <NotFoundComponent />
+                        {/* PAGES LAYOUT CHILDREN END */}
+                    </main>
 
-                <Footer />
-                {/* PAGES LAYOUT END */}
+                    <Footer locale={locale} />
+                    {/* PAGES LAYOUT END */}
+                </TranslationProvider>
                 {/* APP LAYOUT CHILDREN END  */}
 
                 {/* https://vercel.com/docs/speed-insights/quickstart */}

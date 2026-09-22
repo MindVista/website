@@ -6,11 +6,12 @@ import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
 import Hr from "../../../components/Hr";
 import { getPayloadClient } from "../../../../../payloadClient";
 import { SponsorLogos } from "./components/SponsorLogos";
+import { getLocale, Locale } from "@/lib/i18n";
 
-export default async function SponsorPage() {
+export default async function SponsorPage(params: { locale: Locale }) {
     // fetch sponsor pg content
     const data = await (await getPayloadClient()).findGlobal({ slug: "sponsor" });
-
+    const locale = getLocale(params.locale);
     return (
         <Fragment>
             <RefreshRouteOnSave />
@@ -18,8 +19,8 @@ export default async function SponsorPage() {
                 <section>
                     {/* Header Section */}
                     <div className="mb-20 text-center">
-                        <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">Our Sponsors!</h1>
-                        <p className="mx-auto max-w-2xl text-xl font-medium leading-tight text-black dark:text-white">{data.ourSponsorsSection}</p>
+                        <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">{locale === "fr" ? "Nos commanditaires!" : "Our Sponsors!"}</h1>
+                        <p className="mx-auto max-w-2xl text-xl font-medium leading-tight text-black dark:text-white">{locale === "fr" ? data.ourSponsorsSectionFr : data.ourSponsorsSection}</p>
                         <p className="mx-auto mt-6 max-w-2xl rounded-xl border border-cBorder bg-mindvista-700 px-2 py-4 text-xl font-medium leading-tight tracking-tight text-cSoftWhite shadow-md dark:text-white">{data.callout}</p>
                     </div>
 
@@ -35,13 +36,13 @@ export default async function SponsorPage() {
                 <section>
                     {/* Header Section */}
                     <div className="mb-12 text-center">
-                        <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">Sponsor Us!</h1>
-                        <p className="mx-auto max-w-2xl text-xl font-medium leading-tight tracking-tight text-black dark:text-white">{data.sponsorUsSection}</p>
+                        <h1 className="mb-4 text-4xl font-bold tracking-tighter text-black md:text-5xl dark:text-white">{locale === "fr" ? "Sponsor Us!" : "Sponsor Us!"}</h1>
+                        <p className="mx-auto max-w-2xl text-xl font-medium leading-tight tracking-tight text-black dark:text-white">{locale === "fr" ? data.sponsorUsSectionFr : data.sponsorUsSection}</p>
                     </div>
 
                     {/* Contact Form Section */}
                     <div className="mx-auto">
-                        <ContactForm />
+                        <ContactForm locale={locale} />
                     </div>
                 </section>
             </div>

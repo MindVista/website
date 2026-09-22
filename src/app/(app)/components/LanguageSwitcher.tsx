@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Locale } from "@/lib/i18n";
 
 export default function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {

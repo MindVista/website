@@ -4,34 +4,40 @@ import Hr from "./Hr";
 import Link from "next/link";
 import { SocialMediaLink } from "./SocialMediaLink";
 import NewsletterEmailForm from "./NewsletterEmailForm";
+import { getTranslator } from "@/lib/getTranslator";
+import { Locale } from "@/lib/i18n";
+import LocaleLink from "./LocaleLink";
 
-export default function Footer() {
+type Translator = Awaited<ReturnType<typeof getTranslator>>;
+
+export default async function Footer({ locale }: { locale: Locale }) {
+    const t = await getTranslator(locale);
     return (
         <footer className="sticky top-[100vh] flex flex-col gap-8 bg-cBackgroundOffset px-[5vw] pb-24 pt-8">
-            <NewsletterSection />
+            <NewsletterSection translator={t} />
 
             <Hr />
 
             {/* MIDDLE ROW (MOBILE) */}
             <div className="flex flex-col items-center text-cText md:hidden">
-                <EmergencySection />
+                <EmergencySection locale={locale} translator={t} />
 
                 <div className="mt-4 flex flex-row">
                     <Links
                         className="max-w-[50%] text-left"
                         links={[
-                            { href: "/", text: "Home" },
-                            { href: "/about", text: "About" },
-                            { href: "/holistic-wellness", text: "What is Holistic Wellness?" },
+                            { href: "/", text: t("footer.home") },
+                            { href: "/about", text: t("footer.about") },
+                            { href: "/holistic-wellness", text: t("footer.holistic") },
                         ]}
                     />
                     <Links
                         className="max-w-[50%] text-right"
                         links={[
-                            { href: "/volunteer", text: "Volunteer" },
-                            { href: "/directory/resources", text: "Resource Directory" },
-                            { href: "/directory/clubs", text: "Club Directory" },
-                            { href: "/contact", text: "Contact Us" },
+                            { href: "/volunteer", text: t("footer.volunteer") },
+                            { href: "/directory/resources", text: t("footer.resource_directory") },
+                            { href: "/directory/clubs", text: t("footer.club_directory") },
+                            { href: "/contact", text: t("footer.contact_us") },
                         ]}
                     />
                 </div>
@@ -43,19 +49,19 @@ export default function Footer() {
                 <Links
                     className="max-w-[33%] text-left"
                     links={[
-                        { href: "/", text: "Home" },
-                        { href: "/about", text: "About" },
-                        { href: "/holistic-wellness", text: "What is Holistic Wellness?" },
+                        { href: "/", text: t("footer.home") },
+                        { href: "/about", text: t("footer.about") },
+                        { href: "/holistic-wellness", text: t("footer.holistic") },
                     ]}
                 />
-                <EmergencySection className="max-w-[33%]" />
+                <EmergencySection className="max-w-[33%]" locale={locale} translator={t} />
                 <Links
                     className="max-w-[33%] grow basis-0 text-right"
                     links={[
-                        { href: "/volunteer", text: "Volunteer" },
-                        { href: "/directory/resources", text: "Resource Directory" },
-                        { href: "/directory/clubs", text: "Club Directory" },
-                        { href: "/contact", text: "Contact Us" },
+                        { href: "/volunteer", text: t("footer.volunteer") },
+                        { href: "/directory/resources", text: t("footer.resource_directory") },
+                        { href: "/directory/clubs", text: t("footer.club_directory") },
+                        { href: "/contact", text: t("footer.contact_us") },
                     ]}
                 />
             </div>
@@ -64,16 +70,16 @@ export default function Footer() {
 
             <Hr />
 
-            <LegalBar />
+            <LegalBar t={t} />
 
             <section className="absolute bottom-0 left-0 flex min-h-16 min-w-full items-center justify-center gap-4 bg-black p-1 text-lg font-medium text-white">
                 <p>
-                    <span className="hidden md:inline">Want to make a difference in mental wellness?</span>
-                    <span className="inline md:hidden">Make a difference today.</span>
+                    <span className="hidden md:inline">{t("footer.difference")}</span>
+                    <span className="inline md:hidden">{t("footer.make_difference")}</span>
                 </p>
-                <Link href="/sponsor" className="rounded-lg border border-white px-2 py-[0.15rem] transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
-                    Sponsor Us!
-                </Link>
+                <LocaleLink href="/sponsor" className="rounded-lg border border-white px-2 py-[0.15rem] transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
+                    {t("footer.sponsor")}
+                </LocaleLink>
             </section>
         </footer>
     );
@@ -81,9 +87,12 @@ export default function Footer() {
 
 interface ClassNameProps {
     className?: string;
+    locale: string;
+    translator: Translator;
 }
 
-interface LinkProps extends ClassNameProps {
+interface LinkProps {
+    className?: string;
     links: Array<{
         href: string;
         text: string;
@@ -94,21 +103,22 @@ function Links(props: LinkProps) {
     return (
         <div className={`${props.className} flex grow flex-col justify-center gap-[0.5vh] font-semibold`}>
             {props.links.map((link, index) => (
-                <a key={index} href={link.href} className={`transform transition-transform duration-200 hover:scale-110 ${props.className?.includes("text-right") ? "origin-right" : "origin-left"}`}>
+                <LocaleLink key={index} href={link.href} className={`transform transition-transform duration-200 hover:scale-110 ${props.className?.includes("text-right") ? "origin-right" : "origin-left"}`}>
                     {link.text}
-                </a>
+                </LocaleLink>
             ))}
         </div>
     );
 }
 
-function NewsletterSection() {
+function NewsletterSection(props: { translator: Translator }) {
+    const t = props.translator;
     return (
         <div className="rounded-xl bg-cBackgroundOffsetAccent p-6 shadow-lg transition-transform duration-300 hover:scale-[1.01]">
             <div className="flex flex-col gap-6 text-center md:flex-row md:text-left">
                 <div className="flex flex-col space-y-2 self-center md:max-w-[50%]">
-                    <h3 className="bg-gradient-to-r from-cAccent to-cLightBlue bg-clip-text text-xl font-bold text-transparent">Join Our Wellness Newsletter</h3>
-                    <p className="text-cTextOffset">Stay updated with new content, resources and events from MindVista. Unsubscribe anytime — no hard feelings! 🙂</p>
+                    <h3 className="bg-gradient-to-r from-cAccent to-cLightBlue bg-clip-text text-xl font-bold text-transparent">{t("footer.join_newsletter")}</h3>
+                    <p className="text-cTextOffset">{t("footer.stay_updated")}</p>
                 </div>
                 <NewsletterEmailForm />
             </div>
@@ -120,14 +130,14 @@ function EmergencySection(props: ClassNameProps) {
     return (
         <div className={`${props.className} flex grow flex-col items-center gap-1 text-center`}>
             <h3 className="font-serif text-xl font-semibold">MINDVISTA</h3>
-            <p>Your wellness journey starts here.</p>
+            <p>{props.translator("nav.logo")}</p>
 
-            <EmergencyButton className="mt-2" />
+            <EmergencyButton className="mt-2" locale={props.locale} />
         </div>
     );
 }
 
-function LegalBar() {
+function LegalBar(props: { t: Translator }) {
     const year = new Date().getFullYear();
 
     const socialLinks = [
@@ -161,20 +171,22 @@ function LegalBar() {
     return (
         <div className="flex flex-col justify-between text-center md:flex-row md:text-right">
             <div className="flex grow basis-0 flex-row justify-center gap-2 font-semibold text-cTextOffset md:justify-start">
-                <Link href="/privacy-policy" className="transition-transform duration-200 hover:scale-105">
-                    Privacy Policy
-                </Link>
+                <LocaleLink href="/privacy-policy" className="transition-transform duration-200 hover:scale-105">
+                    {props.t("footer.privacy")}
+                </LocaleLink>
                 <span className="font-normal">|</span>
-                <Link href="/terms-and-conditions" className="transition-transform duration-200 hover:scale-105">
-                    Terms &amp; Conditions
-                </Link>
+                <LocaleLink href="/terms-and-conditions" className="transition-transform duration-200 hover:scale-105">
+                    {props.t("footer.terms")}
+                </LocaleLink>
             </div>
             <div className="mt-4 flex grow basis-0 items-center justify-center gap-4 md:mt-0">
                 {socialLinks.map((link) => (
                     <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-gray-600 transition-transform duration-200 hover:scale-110" />
                 ))}
             </div>
-            <p className="mt-4 grow basis-0 font-medium text-cTextOffset md:mt-0">&copy; {year} MindVista. All rights reserved.</p>
+            <p className="mt-4 grow basis-0 font-medium text-cTextOffset md:mt-0">
+                &copy; {year} {props.t("footer.rights")}
+            </p>
         </div>
     );
 }

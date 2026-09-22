@@ -64,7 +64,7 @@ describe("ContactForm", () => {
     };
 
     it("renders all required form fields", () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/organization/i)).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe("ContactForm", () => {
     });
 
     it("shows validation errors for empty required fields", async () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         await user.click(screen.getByRole("button", { name: /send message/i }));
 
@@ -86,7 +86,7 @@ describe("ContactForm", () => {
     });
 
     it("shows validation errors for invalid field values", async () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         // fill form with invalid data
         await user.type(screen.getByLabelText(/name/i), "a"); // too short
@@ -103,7 +103,7 @@ describe("ContactForm", () => {
     });
 
     it("validates maximum length constraints", async () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         // fill form with values exceeding max length
         await user.type(screen.getByLabelText(/name/i), "a".repeat(65));
@@ -118,7 +118,7 @@ describe("ContactForm", () => {
     });
 
     it("allows submission with valid data", async () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         await fillFormWithValidData(user);
         await user.click(screen.getByTestId("hcaptcha"));
@@ -127,7 +127,7 @@ describe("ContactForm", () => {
     });
 
     it("allows submission without optional organization field", async () => {
-        render(<ContactForm />);
+        render(<ContactForm locale="en" />);
 
         await fillFormWithValidData(user, true);
         await user.click(screen.getByTestId("hcaptcha"));

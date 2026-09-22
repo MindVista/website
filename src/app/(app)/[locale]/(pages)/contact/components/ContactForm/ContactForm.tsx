@@ -1,11 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import useWeb3Forms from "@web3forms/react";
+import { Locale } from "@/lib/i18n";
 
 // validation error messages
 export const ERROR_MESSAGES = {
@@ -20,19 +21,35 @@ export const ERROR_MESSAGES = {
     captchaRequired: "Captcha verification is required!",
 } as const;
 
+export const ERROR_MESSAGES_FR: Record<keyof typeof ERROR_MESSAGES, string> = {
+    nameMin: "Doit contenir au moins 1 caractère.",
+    nameMax: "Doit contenir au plus 64 caractères.",
+    orgMax: "Doit contenir au plus 32 caractères.",
+    emailInvalid: "Vous devez entrer une adresse courriel valide.",
+    subjectMin: "Doit contenir au moins 4 caractères.",
+    subjectMax: "L’objet ne doit pas dépasser 78 caractères.",
+    messageMin: "Veuillez entrer au moins 50 caractères.",
+    messageMax: "Le message ne peut pas dépasser 2048 caractères.",
+    captchaRequired: "La vérification captcha est requise!",
+};
+
 // define form scheme for input validation
-const schema = z.object({
-    name: z.string().min(1, { message: ERROR_MESSAGES.nameMin }).max(64, { message: ERROR_MESSAGES.nameMax }).trim(),
-    organization: z.optional(z.string().max(32, { message: ERROR_MESSAGES.orgMax }).trim()),
-    email: z.string().email({ message: ERROR_MESSAGES.emailInvalid }).trim(),
-    subject: z.string().min(4, { message: ERROR_MESSAGES.subjectMin }).max(78, { message: ERROR_MESSAGES.subjectMax }).trim(),
-    message: z.string().min(50, { message: ERROR_MESSAGES.messageMin }).max(2048, { message: ERROR_MESSAGES.messageMax }),
-    captcha: z.string({ message: ERROR_MESSAGES.captchaRequired }),
-});
+const getSchema = (messages: Record<keyof typeof ERROR_MESSAGES, string>) =>
+    z.object({
+        name: z.string().min(1, { message: messages.nameMin }).max(64, { message: messages.nameMax }).trim(),
+        organization: z.optional(z.string().max(32, { message: messages.orgMax }).trim()),
+        email: z.string().email({ message: messages.emailInvalid }).trim(),
+        subject: z.string().min(4, { message: messages.subjectMin }).max(78, { message: messages.subjectMax }).trim(),
+        message: z.string().min(50, { message: messages.messageMin }).max(2048, { message: messages.messageMax }),
+        captcha: z.string({ message: messages.captchaRequired }),
+    });
 
-type FormFields = z.infer<typeof schema>;
+type FormFields = z.infer<ReturnType<typeof getSchema>>;
 
-export default function ContactForm() {
+export default function ContactForm({ locale }: { locale: Locale }) {
+    const isFr = locale === "fr";
+    const schema = useMemo(() => getSchema(isFr ? ERROR_MESSAGES_FR : ERROR_MESSAGES), [isFr]);
+
     const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
 
     if (!HCAPTCHA_SITE_KEY) {
@@ -84,7 +101,7 @@ export default function ContactForm() {
         <form className="border-cBorder/20 mx-auto flex max-w-2xl flex-col space-y-8 rounded-xl border bg-cBackground p-8 shadow-lg dark:border-cBorder" id="contactForm" onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <label htmlFor="name" className="text-cText/80 text-md mb-2 block font-semibold">
-                    Name*
+                    {isFr ? "Nom*" : "Name*"}
                 </label>
                 <input id="name" {...register("name")} type="text" className="bg-cBackgroundOffset/50 placeholder:text-cTextOffset/40 focus:ring-cAccent/20 focus:ring-cAccent/20 w-full rounded-xl border border-slate-300 px-4 py-3 text-lg font-medium text-cText transition-all duration-200 focus:border-cAccent focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-cBackgroundOffset" />
                 {errors.name && <div className="text-md mt-2 text-cRed">{errors.name.message}</div>}
@@ -92,7 +109,7 @@ export default function ContactForm() {
 
             <div>
                 <label htmlFor="organization" className="text-cText/80 text-md mb-2 block font-semibold">
-                    Organization
+                    {isFr ? "Organisation" : "Organization"}
                 </label>
                 <input id="organization" {...register("organization")} type="text" className="bg-cBackgroundOffset/50 placeholder:text-cTextOffset/40 focus:ring-cAccent/20 focus:ring-cAccent/20 w-full rounded-xl border border-slate-300 px-4 py-3 text-lg font-medium text-cText transition-all duration-200 focus:border-cAccent focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-cBackgroundOffset" />
                 {errors.organization && <div className="text-md mt-2 text-cRed">{errors.organization.message}</div>}
@@ -100,7 +117,7 @@ export default function ContactForm() {
 
             <div>
                 <label htmlFor="email" className="text-cText/80 text-md mb-2 block font-semibold">
-                    Email*
+                    {isFr ? "Courriel*" : "Email*"}
                 </label>
                 <input id="email" {...register("email")} type="text" className="bg-cBackgroundOffset/50 placeholder:text-cTextOffset/40 focus:ring-cAccent/20 focus:ring-cAccent/20 w-full rounded-xl border border-slate-300 px-4 py-3 text-lg font-medium text-cText transition-all duration-200 focus:border-cAccent focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-cBackgroundOffset" />
                 {errors.email && <div className="text-md mt-2 text-cRed">{errors.email.message}</div>}
@@ -108,7 +125,7 @@ export default function ContactForm() {
 
             <div>
                 <label htmlFor="subject" className="text-cText/80 text-md mb-2 block font-semibold">
-                    Subject*
+                    {isFr ? "Objet*" : "Subject*"}
                 </label>
                 <input id="subject" {...register("subject")} type="text" className="bg-cBackgroundOffset/50 placeholder:text-cTextOffset/40 focus:ring-cAccent/20 focus:ring-cAccent/20 w-full rounded-xl border border-slate-300 px-4 py-3 text-lg font-medium text-cText transition-all duration-200 focus:border-cAccent focus:outline-none focus:ring-2 dark:border-slate-600 dark:bg-cBackgroundOffset" />
                 {errors.subject && <div className="text-md mt-2 text-cRed">{errors.subject.message}</div>}
@@ -123,15 +140,15 @@ export default function ContactForm() {
             </div>
 
             <div className="flex justify-center">
-                <HCaptcha sitekey={HCAPTCHA_SITE_KEY} reCaptchaCompat={false} onVerify={onHCaptchaChange} theme={theme} />
+                <HCaptcha sitekey={HCAPTCHA_SITE_KEY} reCaptchaCompat={false} onVerify={onHCaptchaChange} theme={theme} languageOverride={locale} />
             </div>
             {errors.captcha && <div className="text-md text-center text-cRed">{errors.captcha.message}</div>}
 
-            {isSuccess === true && <div className="bg-cAccent/10 border-cAccent/20 animate-fade-in rounded-lg border py-4 text-center font-medium text-cAccent">Thank you for your message! We&apos;ll get back to you soon.</div>}
+            {isSuccess === true && <div className="bg-cAccent/10 border-cAccent/20 animate-fade-in rounded-lg border py-4 text-center font-medium text-cAccent">{isFr ? "Merci pour votre message! Nous vous répondrons bientôt." : "Thank you for your message! We'll get back to you soon."}</div>}
 
             {isSuccess === false && (
                 <div className="animate-fade-in rounded-lg border border-cRed py-4 text-center text-cRed">
-                    Something went wrong. Please try again later or email us directly at{" "}
+                    {isFr ? "Une erreur s’est produite. Veuillez réessayer plus tard ou nous écrire directement à" : "Something went wrong. Please try again later or email us directly at"}{" "}
                     <a href="mailto:mindvista.mcgill@gmail.com" className="underline transition-opacity hover:opacity-80">
                         mindvista.mcgill@gmail.com
                     </a>
@@ -140,7 +157,7 @@ export default function ContactForm() {
             )}
 
             <button type="submit" disabled={isSubmitting} className={`w-full rounded-lg bg-gradient-to-r from-cPurple to-cLightBlue py-3 font-semibold text-cSoftWhite transition-all duration-200 hover:opacity-70 disabled:cursor-not-allowed disabled:opacity-50 md:w-auto md:px-8 ${isSubmitting ? "relative text-transparent" : ""}`}>
-                Send Message
+                {isFr ? "Envoyer le message" : "Send Message"}
                 {isSubmitting && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="h-5 w-5 animate-spin rounded-full border-2 border-cSoftWhite border-r-transparent"></div>

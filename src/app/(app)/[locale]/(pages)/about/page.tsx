@@ -3,6 +3,8 @@ import Hr from "../../../components/Hr";
 import Image from "next/image";
 import { Metadata } from "next";
 import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
+import { getLocale } from "@/lib/i18n";
+import { getTranslator } from "@/lib/getTranslator";
 
 const teams = {
     leadership: [
@@ -40,7 +42,9 @@ const teams = {
     ],
 };
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+    const locale = getLocale((await params).locale);
+    const t = await getTranslator(locale);
     return (
         <div className="container mx-auto max-w-7xl px-6 pb-12 pt-20">
             {/* Group Photo */}
@@ -48,28 +52,28 @@ export default function AboutPage() {
                 <Image unoptimized priority src="/team/group-photo.webp" alt="MindVista Team" width={1920} height={1280} className="h-full w-full object-cover brightness-90 transition-transform duration-500 group-hover:scale-105 group-hover:brightness-100" />
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
                 <div className="absolute bottom-0 left-0 right-0 bg-black/40 p-4 text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                    <h3 className="text-xl font-semibold">MindVista Team 2025-2026</h3>
-                    <p className="text-sm">Committed to student wellness and engagement.</p>
+                    <h3 className="text-xl font-semibold">{t("about.team")}</h3>
+                    <p className="text-sm">{t("about.committed")}</p>
                 </div>
             </div>
 
             {/* About Content */}
             <div className="mx-auto mb-16 max-w-4xl space-y-6">
-                <h1 className="mb-4 bg-gradient-to-r from-purple-500 to-blue-400 bg-clip-text text-center text-3xl font-bold text-transparent md:text-4xl dark:from-purple-400 dark:to-blue-300">About MindVista&apos;s Initiative</h1>
+                <h1 className="mb-4 bg-gradient-to-r from-purple-500 to-blue-400 bg-clip-text text-center text-3xl font-bold text-transparent md:text-4xl dark:from-purple-400 dark:to-blue-300">{t("about.mindvista")}</h1>
 
-                <p className="text-base font-medium leading-relaxed text-cTextOffset">Established in 2023, MindVista emerged from the collaborative as part of the Integrated Management Student Fellowship (IMSF) at McGill University. Rooted in a commitment to enhancing mental wellness, our group functions as a student, volunteer-run initiative that envisions a holistic approach to fostering well-being for every McGill student.</p>
+                <p className="text-base font-medium leading-relaxed text-cTextOffset">{t("about.established")}</p>
 
-                <p className="text-base font-medium leading-relaxed text-cTextOffset">Dedicated to creating a positive impact on campus mental health, MindVista provides a range of initiatives, including:</p>
+                <p className="text-base font-medium leading-relaxed text-cTextOffset">{t("about.dedicated")}</p>
 
                 <ul className="my-6 list-inside list-disc space-y-1 pl-4 text-base font-semibold text-cText">
-                    <li>Comprehensive Mental Wellness Resources</li>
-                    <li>Club Directory for Increased Engagement</li>
-                    <li>Weekly Wellness Newsletter</li>
-                    <li>Host Wellness Events</li>
-                    <li>Wellness Challenges and Giveaways with Epic Rewards</li>
+                    <li>{t("about.wellnessresources")}</li>
+                    <li>{t("about.directory")}</li>
+                    <li>{t("about.newsletter")}</li>
+                    <li>{t("about.hostevents")}</li>
+                    <li>{t("about.giveaways")}</li>
                 </ul>
 
-                <p className="text-base font-medium leading-relaxed text-cTextOffset">Join MindVista on our mission to cultivate a campus culture that prioritizes mental wellness and fosters a sense of community among McGill students. Together, let&apos;s embark on a journey towards a healthier and more connected student experience.</p>
+                <p className="text-base font-medium leading-relaxed text-cTextOffset">{t("about.join")}</p>
             </div>
 
             <Hr className="mb-16" />
