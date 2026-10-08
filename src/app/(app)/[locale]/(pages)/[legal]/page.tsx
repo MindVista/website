@@ -7,7 +7,8 @@ import { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import styles from "./legal.module.css";
 import { Legal, Page } from "@/payload-types";
 import { Metadata } from "next";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, localize } from "@/lib/i18n";
+import { getTranslator } from "@/lib/getTranslator";
 
 // ISR LOGIC START -----------------------------------------------------------------
 
@@ -42,13 +43,15 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const legalPage = await getLegalPage((await params).legal);
-    if (!legalPage) return { title: "404: Page Not Found" };
+    const { legal: slug, locale: rawLocale } = await params;
+    const locale = getLocale(rawLocale);
+    const legalPage = await getLegalPage(slug);
+    if (!legalPage) return { title: (await getTranslator(locale))("meta.not_found") };
     const page = legalPage.page as Page;
 
     return {
-        title: `${page.title}`,
-        description: page.seoDescription,
+        title: localize(locale, page.title, page.titleFr),
+        description: localize(locale, page.seoDescription, page.seoDescriptionFr),
     };
 }
 

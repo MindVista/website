@@ -1,11 +1,13 @@
 import { FiTag } from "react-icons/fi";
+import { Locale } from "@/lib/i18n";
+import { translateTag } from "@/lib/tagTranslations";
 
 export interface Tag {
     id: string | number;
     name?: string;
 }
 
-export default function TagsSection({ tags }: { tags: (Tag | number)[] }) {
+export default function TagsSection({ tags, locale }: { tags: (Tag | number)[]; locale: Locale }) {
     if (!tags || tags.length === 0) return null;
 
     return (
@@ -13,12 +15,12 @@ export default function TagsSection({ tags }: { tags: (Tag | number)[] }) {
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                     <FiTag className="h-5 w-5 text-cTextOffset" />
-                    <span className="text-base font-semibold text-cText">Tags:</span>
+                    <span className="text-base font-semibold text-cText">{locale === "fr" ? "Étiquettes :" : "Tags:"}</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     {tags.map((tag) => (
                         <span key={typeof tag === "number" ? tag : tag.id} className="inline-block rounded-full bg-cBackgroundOffsetAccent px-3 py-1 text-sm text-cAccent transition-colors hover:bg-cBackgroundOffset">
-                            {typeof tag === "number" ? tag : tag.name}
+                            {typeof tag === "number" ? tag : translateTag(tag.name ?? "", locale)}
                         </span>
                     ))}
                 </div>

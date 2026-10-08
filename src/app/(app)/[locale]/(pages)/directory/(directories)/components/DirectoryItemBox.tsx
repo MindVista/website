@@ -2,6 +2,7 @@ import React from "react";
 import { Club, Resource } from "../../../../../../../payload-types";
 import LocaleLink from "../../../../../components/LocaleLink";
 import { Locale } from "../../../../../../../lib/i18n";
+import { translateTag } from "../../../../../../../lib/tagTranslations";
 
 interface DirectoryItemBoxProps {
     item: Club | Resource;
@@ -10,8 +11,9 @@ interface DirectoryItemBoxProps {
 }
 
 export function DirectoryItemBox({ item, type, locale }: DirectoryItemBoxProps) {
-    const description = locale == "fr" ? item.descriptionFr : item.description;
-    const title = locale == "fr" ? item.titleFr : item.title;
+    // fall back to English when a French translation hasn't been added yet
+    const description = locale === "fr" && item.descriptionFr ? item.descriptionFr : item.description;
+    const title = locale === "fr" && item.titleFr ? item.titleFr : item.title;
 
     return (
         <LocaleLink href={`/directory/${type}/${item.slug}`} key={item.id} prefetch={true} className="group block rounded-lg border border-cBorder bg-cBackgroundOffset p-6 shadow-sm transition-all duration-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-800 dark:hover:shadow-blue-950/50">
@@ -21,7 +23,7 @@ export function DirectoryItemBox({ item, type, locale }: DirectoryItemBoxProps) 
                 <div className="mt-auto flex flex-wrap gap-2">
                     {item.tags.map((tag: { id: string | number; name?: string } | number) => (
                         <span key={typeof tag === "number" ? tag : tag.id} className="inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-100">
-                            {typeof tag === "number" ? tag : tag.name}
+                            {typeof tag === "number" ? tag : translateTag(tag.name ?? "", locale)}
                         </span>
                     ))}
                 </div>

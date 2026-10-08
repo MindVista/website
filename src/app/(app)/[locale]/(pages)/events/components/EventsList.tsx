@@ -3,6 +3,7 @@
 import { EventCard } from "./EventCard";
 import { EventCardSkeleton } from "./EventCardSkeleton";
 import { useEvents } from "../EventsProvider";
+import { useTranslations } from "@/lib/TranslationProvider";
 
 interface EventsListProps {
     type: "ongoing" | "upcoming" | "past";
@@ -12,6 +13,7 @@ interface EventsListProps {
 
 export function EventsList({ type, className, variant = "default" }: EventsListProps) {
     const { ongoingEvents, upcomingEvents, pastEvents, isLoading } = useEvents();
+    const t = useTranslations();
 
     const events = {
         ongoing: ongoingEvents,
@@ -48,8 +50,8 @@ export function EventsList({ type, className, variant = "default" }: EventsListP
         // for upcoming and past events, display message
         return (
             <div className="text-center text-lg text-cTextOffset">
-                {type === "upcoming" && "No upcoming events at the moment."}
-                {type === "past" && "No past events to display."}
+                {type === "upcoming" && t("events.no_upcoming")}
+                {type === "past" && t("events.no_past")}
             </div>
         );
     }

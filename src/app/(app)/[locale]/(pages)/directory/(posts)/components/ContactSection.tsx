@@ -1,5 +1,6 @@
 import { FiGlobe, FiMail, FiPhone } from "react-icons/fi";
 import { FaPaperPlane } from "react-icons/fa";
+import { Translator } from "@/lib/getTranslator";
 
 export interface ContactInfo {
     website?: string;
@@ -8,12 +9,12 @@ export interface ContactInfo {
     newsletter?: string;
 }
 
-export default function ContactSection({ contactInfo }: { contactInfo: ContactInfo }) {
+export default function ContactSection({ contactInfo, translator: t }: { contactInfo: ContactInfo; translator: Translator }) {
     if (!contactInfo.website && !contactInfo.email && !contactInfo.phoneNumber && !contactInfo.newsletter) return null;
 
     return (
         <div className="flex h-full flex-col rounded-2xl border border-cBorder bg-cBackgroundOffset p-6 shadow-sm transition-all hover:shadow-md md:p-8">
-            <h2 className="mb-6 text-xl font-semibold text-cText">Contact Information</h2>
+            <h2 className="mb-6 text-xl font-semibold text-cText">{t("directory.contact_info")}</h2>
             <div className="space-y-4">
                 {contactInfo.website && (
                     <div className="group">
@@ -43,7 +44,7 @@ export default function ContactSection({ contactInfo }: { contactInfo: ContactIn
                     <div className="group">
                         <a href={contactInfo.newsletter.startsWith("http") ? contactInfo.newsletter : `https://${contactInfo.newsletter}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 text-cAccent transition-colors hover:text-cPurple">
                             <FaPaperPlane className="mt-0.5 h-5 w-5 flex-shrink-0" />
-                            <span className="break-all group-hover:underline">Join the newsletter!</span>
+                            <span className="break-all group-hover:underline">{t("directory.join_newsletter")}</span>
                         </a>
                     </div>
                 )}

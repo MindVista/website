@@ -71,7 +71,7 @@ function LandingNavBarDesktop({ hasAnnouncement, locale }: { hasAnnouncement?: b
                 <nav className="flex w-2/5 flex-row gap-10 text-lg font-semibold xl:gap-12 2xl:gap-16">
                     <div className="flex items-center gap-8">
                         {socialLinks.map((link) => (
-                            <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent transition-transform duration-200 hover:scale-110 dark:text-white" size="1.5rem" />
+                            <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} locale={locale} className="text-cAccent transition-transform duration-200 hover:scale-110 dark:text-white" size="1.5rem" />
                         ))}
                     </div>
                     <LocaleLink href="/" className="transition-transform duration-200 hover:scale-110">
@@ -84,7 +84,7 @@ function LandingNavBarDesktop({ hasAnnouncement, locale }: { hasAnnouncement?: b
 
                 <div className="flex w-1/5 justify-center">
                     <LocaleLink href="/">
-                        <Image width={164} height={164} className="h-16 w-16 rounded-full border-4 border-black bg-black transition-transform duration-200 hover:scale-110 dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt="MindVista Logo" />
+                        <Image width={164} height={164} className="h-16 w-16 rounded-full border-4 border-black bg-black transition-transform duration-200 hover:scale-110 dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt={t("common.logo_alt")} />
                     </LocaleLink>
                 </div>
 

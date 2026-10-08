@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 // import Hr from "../../components/Hr";
-import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
+import { getLocalizedPageMetadata } from "../../../../../lib/getPageFromCMS";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n";
 import { getTranslator } from "@/lib/getTranslator";
@@ -94,12 +94,6 @@ export default async function CrisisPage({ params }: { params: Promise<{ locale:
     );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    const page = await getPageFromCMS("crisis");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    return getLocalizedPageMetadata("crisis", params);
 }

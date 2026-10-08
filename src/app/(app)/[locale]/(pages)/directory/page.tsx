@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import EntityCount from "./components/EntityCount";
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getLocalizedPageMetadata } from "@/lib/getPageFromCMS";
 import { Metadata } from "next";
 import { getLocale } from "@/lib/i18n";
 import LocaleLink from "@/app/(app)/components/LocaleLink";
@@ -59,12 +59,6 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
     );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    const page = await getPageFromCMS("directory");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    return getLocalizedPageMetadata("directory", params);
 }

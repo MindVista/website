@@ -13,7 +13,8 @@ import ContactSection from "../../components/ContactSection";
 import PostHeader from "../../components/PostHeader";
 import LastUpdatedSection from "../../../../../../components/LastUpdatedSection";
 import ImageModal from "@/app/(app)/components/ImageModal";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, localize } from "@/lib/i18n";
+import { getTranslator } from "@/lib/getTranslator";
 
 interface Props {
     params: Promise<{
@@ -26,13 +27,15 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const club = await getClub((await params).club);
+    const { club: slug, locale: rawLocale } = await params;
+    const locale = getLocale(rawLocale);
+    const club = await getClub(slug);
 
-    if (!club) return { title: "404: Page Not Found" };
+    if (!club) return { title: (await getTranslator(locale))("meta.not_found") };
 
     return {
-        title: `${club.title}`,
-        description: club.description,
+        title: localize(locale, club.title, club.titleFr),
+        description: localize(locale, club.description, club.descriptionFr),
     };
 }
 
@@ -52,8 +55,9 @@ async function getClub(slug: string): Promise<Club | null> {
 
 export default async function ClubPage({ params }: Props) {
     const club = await getClub((await params).club);
-    const locale = await getLocale((await params).locale);
+    const locale = getLocale((await params).locale);
     if (!club) return notFound();
+    const t = await getTranslator(locale);
 
     const tags = club.tags?.map((tag: number | { id: string | number; name?: string }) => (typeof tag === "number" ? { id: tag, name: tag.toString() } : tag)) ?? [];
 
@@ -61,6 +65,7 @@ export default async function ClubPage({ params }: Props) {
 
     const title = locale === "fr" && club?.titleFr ? club.titleFr : club.title;
     const description = locale === "fr" && club?.descriptionFr ? club.descriptionFr : club.description;
+    const graphicTitle = localize(locale, club.graphicTitle, club.graphicTitleFr);
     return (
         <Fragment>
             <RefreshRouteOnSave />
@@ -69,7 +74,7 @@ export default async function ClubPage({ params }: Props) {
                 description={description}
                 status={{
                     isActive: club.currentlyActive || false,
-                    label: club.currentlyActive ? "Active" : "Inactive",
+                    label: club.currentlyActive ? t("status.active") : t("status.inactive"),
                 }}
             />
 
@@ -84,6 +89,7 @@ export default async function ClubPage({ params }: Props) {
                                 phoneNumber: club.phoneNumber || undefined,
                                 newsletter: club.newsletter || undefined,
                             }}
+                            translator={t}
                         />
                     </div>
                 )}
@@ -93,7 +99,7 @@ export default async function ClubPage({ params }: Props) {
                         <div className="flex h-full flex-col rounded-2xl border border-cBorder bg-cBackgroundOffset p-6 shadow-sm transition-all hover:shadow-md md:p-8">
                             <div className="mb-6 flex items-center gap-2">
                                 <FiShare2 className="h-5 w-5 text-cTextOffset" />
-                                <h2 className="text-xl font-semibold text-cText">Social Media</h2>
+                                <h2 className="text-xl font-semibold text-cText">{t("directory.social_media")}</h2>
                             </div>
                             <div className="space-y-4">
                                 {club.facebook && (
@@ -116,7 +122,7 @@ export default async function ClubPage({ params }: Props) {
                                     <div key={social.id || index} className="group">
                                         <Link href={social.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-cAccent transition-colors hover:text-cPurple">
                                             <FiLink className="h-5 w-5 flex-shrink-0" />
-                                            <span className="font-medium">Others</span>
+                                            <span className="font-medium">{t("directory.others")}</span>
                                         </Link>
                                     </div>
                                 ))}
@@ -127,21 +133,21 @@ export default async function ClubPage({ params }: Props) {
             </div>
 
             {/* Club Graphic */}
-            {club.graphicTitle && typeof club.graphic === "object" && club.graphic?.url && (
+            {graphicTitle && typeof club.graphic === "object" && club.graphic?.url && (
                 <div className="mt-6 flex h-full flex-col rounded-2xl border border-cBorder bg-cBackgroundOffset p-6 shadow-sm transition-all hover:shadow-md md:p-8">
                     <div className="flex flex-row items-center gap-2">
                         <FaImage />
-                        <h2 className="text-xl font-semibold text-cText">{club.graphicTitle}</h2>
+                        <h2 className="text-xl font-semibold text-cText">{graphicTitle}</h2>
                     </div>
-                    <ImageModal className="my-8 md:mt-14" url={club.graphic.url} altText={club.graphic.alt} width={club.graphic.width || 1000} height={club.graphic.height || 1000} />
+                    <ImageModal className="my-8 md:mt-14" url={club.graphic.url} altText={localize(locale, club.graphic.alt, club.graphic.altFr)} width={club.graphic.width || 1000} height={club.graphic.height || 1000} />
                 </div>
             )}
 
             {/* Tags */}
-            {tags.length > 0 && <TagsSection tags={tags} />}
+            {tags.length > 0 && <TagsSection tags={tags} locale={locale} />}
 
             {/* Last Updated */}
-            <LastUpdatedSection updatedAt={new Date(club.updatedAt)} />
+            <LastUpdatedSection updatedAt={new Date(club.updatedAt)} locale={locale} />
         </Fragment>
     );
 }

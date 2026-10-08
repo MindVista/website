@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import ContactForm from "./components/ContactForm/ContactForm";
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getLocalizedPageMetadata } from "@/lib/getPageFromCMS";
 import { FaFacebook, FaInstagram, FaTiktok, FaLinkedin, FaGithub } from "react-icons/fa";
 import { SocialMediaLink } from "../../../components/SocialMediaLink";
 import { getTranslator } from "@/lib/getTranslator";
@@ -60,7 +60,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 {/* SOCIAL MEDIA ICONS */}
                 <div className="mb-6 flex items-center justify-center gap-4">
                     {socialLinks.map((link) => (
-                        <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent dark:text-white" size="2rem" />
+                        <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} locale={locale} className="text-cAccent dark:text-white" size="2rem" />
                     ))}
                 </div>
 
@@ -94,12 +94,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    const page = await getPageFromCMS("contact");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    return getLocalizedPageMetadata("contact", params);
 }

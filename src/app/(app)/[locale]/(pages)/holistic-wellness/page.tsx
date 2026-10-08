@@ -1,6 +1,6 @@
 import { RefreshRouteOnSave } from "../../../components/RefreshRouteOnSave";
 import { Fragment } from "react";
-import { getPageFromCMS } from "../../../../../lib/getPageFromCMS";
+import { getLocalizedPageMetadata } from "../../../../../lib/getPageFromCMS";
 import { getPayloadClient } from "../../../../../payloadClient";
 import { Metadata } from "next";
 import { WellnessWheel } from "./components/WellnessWheel";
@@ -77,12 +77,6 @@ export default async function HolisticWellnessPage({ params }: { params: Promise
     );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    const page = await getPageFromCMS("holistic-wellness");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    return getLocalizedPageMetadata("holistic-wellness", params);
 }

@@ -1,4 +1,4 @@
-import { getPageFromCMS } from "@/lib/getPageFromCMS";
+import { getLocalizedPageMetadata } from "@/lib/getPageFromCMS";
 import { Metadata } from "next";
 import ResourceDirectoryClient from "./ResourceDirectoryClient";
 import { getLocale } from "@/lib/i18n";
@@ -9,12 +9,6 @@ export default async function ResourceDirectory({ params }: { params: Promise<{ 
     return <ResourceDirectoryClient locale={locale} />;
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-    const page = await getPageFromCMS("directory/resources");
-    return {
-        ...(page && {
-            title: page.title,
-            description: page.seoDescription,
-        }),
-    };
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    return getLocalizedPageMetadata("directory/resources", params);
 }

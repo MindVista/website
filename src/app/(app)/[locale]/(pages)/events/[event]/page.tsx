@@ -3,7 +3,6 @@ import { Fragment } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPayloadClient } from "../../../../../../payloadClient";
-import Link from "next/link";
 import { FiArrowLeft, FiCalendar, FiMapPin, FiGift, FiExternalLink, FiInstagram } from "react-icons/fi";
 import LastUpdatedSection from "../../../../components/LastUpdatedSection";
 import LocationButton from "./components/LocationButton";
@@ -11,7 +10,9 @@ import Hr from "../../../../components/Hr";
 import { OngoingBadge } from "../components/OngoingBadge";
 import { EventDate } from "../components/EventDate";
 import ImageModal from "../../../../components/ImageModal";
-import { getLocale } from "../../../../../../lib/i18n";
+import LocaleLink from "../../../../components/LocaleLink";
+import { getLocale, localize } from "../../../../../../lib/i18n";
+import { getTranslator } from "../../../../../../lib/getTranslator";
 
 type PageProps = {
     params: Promise<{
@@ -36,12 +37,14 @@ async function getEvent(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const event = await getEvent((await params).event);
-    if (!event) return { title: "404: Page Not Found" };
+    const { event: slug, locale: rawLocale } = await params;
+    const locale = getLocale(rawLocale);
+    const event = await getEvent(slug);
+    if (!event) return { title: (await getTranslator(locale))("meta.not_found") };
 
     return {
-        title: event.title,
-        description: event.description,
+        title: localize(locale, event.title, event.titleFr),
+        description: localize(locale, event.description, event.descriptionFr),
     };
 }
 
@@ -49,9 +52,15 @@ export default async function EventPage({ params }: PageProps) {
     const event = await getEvent((await params).event);
     const locale = getLocale((await params).locale);
     if (!event || !locale) return notFound();
+    const t = await getTranslator(locale);
 
     const now = new Date();
     const isOngoing = event.dateRanges?.some((range) => new Date(range.startDate) <= now && new Date(range.endDate) >= now);
+
+    const title = localize(locale, event.title, event.titleFr);
+    const description = localize(locale, event.description, event.descriptionFr);
+    const location = localize(locale, event.location, event.locationFr);
+    const incentive = localize(locale, event.incentive, event.incentiveFr);
 
     // Handle locationLink type
     const locationLink = typeof event.locationLink === "string" ? event.locationLink : undefined;
@@ -63,21 +72,21 @@ export default async function EventPage({ params }: PageProps) {
                 <div className="rounded-2xl border border-cBorder bg-cBackgroundOffset px-6 pb-3 pt-6 shadow-sm transition-all hover:shadow-md md:px-8 md:pt-8">
                     {/* Header */}
                     <div className="flex flex-row items-start justify-between">
-                        <h1 className="text-2xl font-bold leading-tight text-cText sm:text-3xl lg:text-4xl">{event.title}</h1>
-                        {isOngoing && <OngoingBadge className="flex-shrink-0" />}
+                        <h1 className="text-2xl font-bold leading-tight text-cText sm:text-3xl lg:text-4xl">{title}</h1>
+                        {isOngoing && <OngoingBadge label={t("events.ongoing")} className="flex-shrink-0" />}
                     </div>
-                    <p className="mt-4 text-base leading-relaxed text-cTextOffset sm:text-lg">{event.description}</p>
+                    <p className="mt-4 text-base leading-relaxed text-cTextOffset sm:text-lg">{description}</p>
                     {event.instagramPost && (
                         <a href={event.instagramPost} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-2 text-cAccent hover:underline">
                             <FiInstagram className="h-4 w-4" />
-                            More info on our Instagram
+                            {t("events.instagram")}
                             <FiExternalLink className="h-4 w-4" />
                         </a>
                     )}
                     {event.signUpLink && (
                         <div className="mt-4 flex justify-center">
                             <a href={event.signUpLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-cBorder bg-cBackground px-4 py-2 text-sm font-medium text-cText transition-colors hover:border-cAccent hover:text-cAccent">
-                                Sign up for this event
+                                {t("events.sign_up")}
                                 <FiExternalLink className="h-4 w-4" />
                             </a>
                         </div>
@@ -91,29 +100,29 @@ export default async function EventPage({ params }: PageProps) {
                         <div className="space-y-3 md:mx-auto md:max-w-[25%]">
                             <div className="flex items-center gap-2">
                                 <FiCalendar className="h-5 w-5 text-cTextOffset" />
-                                <h2 className="text-lg font-semibold text-cText">Date & Time</h2>
+                                <h2 className="text-lg font-semibold text-cText">{t("events.date_time")}</h2>
                             </div>
-                            <div className="space-y-2">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
+                            <div className="space-y-2">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} locale={locale} className="text-cTextOffset" />)}</div>
                         </div>
 
                         {/* Location */}
                         <div className="space-y-3 md:mx-auto md:max-w-[33%]">
                             <div className="flex items-center gap-2">
                                 <FiMapPin className="h-5 w-5 text-cTextOffset" />
-                                <h2 className="text-lg font-semibold text-cText">Location</h2>
+                                <h2 className="text-lg font-semibold text-cText">{t("events.location")}</h2>
                             </div>
-                            <LocationButton location={event.location} locationLink={locationLink} />
+                            <LocationButton location={location} locationLink={locationLink} />
                         </div>
 
                         {/* Incentive */}
-                        {event.incentive && (
+                        {incentive && (
                             <div className="space-y-3 md:mx-auto md:max-w-[25%]">
                                 <div className="flex items-center gap-2">
                                     <FiGift className="h-5 w-5 text-cTextOffset" />
-                                    <h2 className="text-lg font-semibold text-cText">Incentive</h2>
+                                    <h2 className="text-lg font-semibold text-cText">{t("events.incentive")}</h2>
                                 </div>
                                 <p className={`font-medium ${event.isChance ? "text-purple-500 dark:text-purple-400" : "text-blue-500 dark:text-blue-400"}`}>
-                                    {event.isChance ? "❓" : "🎁"} {event.incentive}
+                                    {event.isChance ? "❓" : "🎁"} {incentive}
                                     <span className="text-xs">
                                         {event.isChance ? "†" : ""}
                                         {event.limitedAvailability ? "*" : ""}
@@ -124,19 +133,19 @@ export default async function EventPage({ params }: PageProps) {
                     </div>
 
                     {/* Event Graphic */}
-                    {typeof event.graphic === "object" && event.graphic?.url && <ImageModal className="my-8 md:mt-14" url={event.graphic.url} altText={event.graphic.alt} width={event.graphic.width || 1000} height={event.graphic.height || 1000} />}
+                    {typeof event.graphic === "object" && event.graphic?.url && <ImageModal className="my-8 md:mt-14" url={event.graphic.url} altText={localize(locale, event.graphic.alt, event.graphic.altFr)} width={event.graphic.width || 1000} height={event.graphic.height || 1000} />}
 
                     <div className="min-h-4"></div>
-                    {event.isChance && <p className="text-xs text-cTextOffset">&dagger;Incentives are awarded on a chance-to-win basis. There is no guaranteed prize.</p>}
-                    {event.limitedAvailability && <p className="text-xs text-cTextOffset">*Incentives are available while supplies last, on a first-come, first-served basis.</p>}
+                    {event.isChance && <p className="text-xs text-cTextOffset">&dagger;{t("events.chance_disclaimer")}</p>}
+                    {event.limitedAvailability && <p className="text-xs text-cTextOffset">*{t("events.limited_disclaimer")}</p>}
                 </div>
                 {/* Footer */}
                 <div className="mt-8 flex flex-col items-center">
-                    <Link href="/events" className="inline-flex items-center gap-2 rounded-lg border border-cBorder bg-cBackgroundOffset px-4 py-2 text-base font-medium text-cText transition-colors hover:border-cAccent hover:text-cAccent">
+                    <LocaleLink href="/events" className="inline-flex items-center gap-2 rounded-lg border border-cBorder bg-cBackgroundOffset px-4 py-2 text-base font-medium text-cText transition-colors hover:border-cAccent hover:text-cAccent">
                         <FiArrowLeft className="h-5 w-5" />
-                        Go back to Events
-                    </Link>
-                    <LastUpdatedSection updatedAt={new Date(event.updatedAt)} />
+                        {t("events.back")}
+                    </LocaleLink>
+                    <LastUpdatedSection updatedAt={new Date(event.updatedAt)} locale={locale} />
                 </div>
             </div>
         </Fragment>

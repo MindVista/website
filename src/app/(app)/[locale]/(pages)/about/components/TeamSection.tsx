@@ -10,10 +10,11 @@ interface TeamMember {
 interface Props {
     title: string;
     members: TeamMember[];
+    isDevTeam?: boolean;
 }
 
 export default function TeamSection(props: Props) {
-    const isDevTeam = props.title === "Website Team";
+    const isDevTeam = props.isDevTeam ?? false;
     return (
         <section className="mb-16">
             <h2 className="mb-8 text-center text-3xl font-bold text-cText">{props.title}</h2>

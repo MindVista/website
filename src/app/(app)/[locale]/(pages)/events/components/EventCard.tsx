@@ -1,18 +1,25 @@
+"use client";
+
 import { Event } from "@/payload-types";
-import Link from "next/link";
 import { EventDate } from "./EventDate";
 import { OngoingBadge } from "./OngoingBadge";
 import { OngoingPulse } from "./OngoingPulse";
 import LocaleLink from "@/app/(app)/components/LocaleLink";
-import { Locale } from "node_modules/next/dist/compiled/@vercel/og/satori";
+import { localize } from "@/lib/i18n";
+import { useLocale, useTranslations } from "@/lib/TranslationProvider";
 
 interface EventCardProps {
     event: Event;
     variant?: "default" | "featured" | "compactDefault" | "compactFeatured";
-    locale: Locale;
 }
 
 export function EventCard({ event, variant = "default" }: EventCardProps) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const title = localize(locale, event.title, event.titleFr);
+    const description = localize(locale, event.description, event.descriptionFr);
+    const location = localize(locale, event.location, event.locationFr);
+    const incentive = localize(locale, event.incentive, event.incentiveFr);
     const isCompact = variant.startsWith("compact");
     const now = new Date();
     const isOngoing = event.dateRanges?.some((range) => new Date(range.startDate) <= now && new Date(range.endDate) >= now);
@@ -39,17 +46,17 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                 )}
                 <div className="flex h-full flex-col">
                     <div className="space-y-1.5">
-                        <p className="-mb-2 text-xs font-semibold">{isOngoing ? "Ongoing" : "Upcoming"}</p>
-                        <h3 className={`${titleClassName} block overflow-hidden text-ellipsis whitespace-nowrap pr-8`}>{event.title}</h3>
+                        <p className="-mb-2 text-xs font-semibold">{isOngoing ? t("events.ongoing") : t("events.upcoming")}</p>
+                        <h3 className={`${titleClassName} block overflow-hidden text-ellipsis whitespace-nowrap pr-8`}>{title}</h3>
 
-                        <div className="text-xs">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact />)}</div>
+                        <div className="text-xs">{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="truncate whitespace-nowrap text-cTextOffset" compact locale={locale} />)}</div>
                     </div>
 
                     <div className="mt-auto space-y-1">
-                        <p className="truncate text-xs font-medium text-cTextOffset">📍 {event.location}</p>
-                        {event.incentive && (
+                        <p className="truncate text-xs font-medium text-cTextOffset">📍 {location}</p>
+                        {incentive && (
                             <p className={`truncate text-xs font-medium ${event.isChance ? "text-purple-500 dark:text-purple-400" : "text-blue-500 dark:text-blue-400"}`}>
-                                {event.isChance ? "❓" : "🎁"} {event.incentive}
+                                {event.isChance ? "❓" : "🎁"} {incentive}
                                 <span className="text-xs">
                                     {event.isChance ? "†" : ""}
                                     {event.limitedAvailability ? "*" : ""}
@@ -67,22 +74,22 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
             <div className={`space-y-3 ${variant === "featured" ? "space-y-6" : ""}`}>
                 <div className="space-y-2">
                     <div className="flex justify-between">
-                        <h3 className={titleClassName}>{event.title}</h3>
+                        <h3 className={titleClassName}>{title}</h3>
                         {isOngoing && (
                             <div className="transform-gpu">
-                                <OngoingBadge />
+                                <OngoingBadge label={t("events.ongoing")} />
                             </div>
                         )}
                     </div>
 
-                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" />)}</div>
+                    <div className={`space-y-1 ${variant === "featured" ? "text-base" : "text-sm"}`}>{event.dateRanges?.map((range, index) => <EventDate key={index} startDate={range.startDate} endDate={range.endDate} className="text-cTextOffset" locale={locale} />)}</div>
 
                     <div className={`flex flex-col gap-2 ${variant === "featured" ? "text-base" : "text-sm"}`}>
-                        <p className="font-medium text-cTextOffset">📍 {event.location}</p>
-                        {event.incentive && (
+                        <p className="font-medium text-cTextOffset">📍 {location}</p>
+                        {incentive && (
                             <p className={`inline-flex items-center gap-1.5 font-medium ${event.isChance ? "text-purple-500 dark:text-purple-400" : "text-blue-500 dark:text-blue-400"}`}>
                                 <span>
-                                    {event.isChance ? "❓" : "🎁"} {event.incentive}
+                                    {event.isChance ? "❓" : "🎁"} {incentive}
                                     <span className="text-xs">
                                         {event.isChance ? "†" : ""}
                                         {event.limitedAvailability ? "*" : ""}
@@ -93,7 +100,7 @@ export function EventCard({ event, variant = "default" }: EventCardProps) {
                     </div>
                 </div>
 
-                <p className={descriptionClassName}>{event.description}</p>
+                <p className={descriptionClassName}>{description}</p>
 
                 {variant === "featured" && <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />}
             </div>

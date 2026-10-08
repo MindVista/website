@@ -70,7 +70,7 @@ export default async function Footer({ locale }: { locale: Locale }) {
 
             <Hr />
 
-            <LegalBar t={t} />
+            <LegalBar t={t} locale={locale} />
 
             <section className="absolute bottom-0 left-0 flex min-h-16 min-w-full items-center justify-center gap-4 bg-black p-1 text-lg font-medium text-white">
                 <p>
@@ -137,7 +137,7 @@ function EmergencySection(props: ClassNameProps) {
     );
 }
 
-function LegalBar(props: { t: Translator }) {
+function LegalBar(props: { t: Translator; locale: Locale }) {
     const year = new Date().getFullYear();
 
     const socialLinks = [
@@ -181,7 +181,7 @@ function LegalBar(props: { t: Translator }) {
             </div>
             <div className="mt-4 flex grow basis-0 items-center justify-center gap-4 md:mt-0">
                 {socialLinks.map((link) => (
-                    <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-gray-600 transition-transform duration-200 hover:scale-110" />
+                    <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} locale={props.locale} className="text-gray-600 transition-transform duration-200 hover:scale-110" />
                 ))}
             </div>
             <p className="mt-4 grow basis-0 font-medium text-cTextOffset md:mt-0">

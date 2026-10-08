@@ -7,50 +7,33 @@ import NextTopLoader from "nextjs-toploader";
 import NavBar from "./(app)/components/navbar/NavBar";
 import Footer from "./(app)/components/Footer";
 import { cookies } from "next/headers";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, Locale } from "@/lib/i18n";
 import { getMessages } from "@/lib/getMessages";
+import { getTranslator, Translator } from "@/lib/getTranslator";
 import { TranslationProvider } from "@/lib/TranslationProvider";
 
 const messages = [
-    {
-        main: "Sometimes we lose our way, and that's okay.",
-        sub: "Take a deep breath and let's find our path together.",
-    },
-    {
-        main: "Just like our thoughts, sometimes pages wander off.",
-        sub: "Take this moment to pause, breathe, and return to your center.",
-    },
-    {
-        main: "This path may be lost, but you are not.",
-        sub: "Every detour is an opportunity for a new perspective.",
-    },
-    {
-        main: "Sometimes the best discoveries come from getting lost.",
-        sub: "Take a deep breath and explore a different direction.",
-    },
-    {
-        main: "Like meditation, not every path leads where we expect.",
-        sub: "Let's mindfully find our way back together.",
-    },
-    {
-        main: "Even the most traveled paths have their dead ends.",
-        sub: "Use this pause to check in with yourself.",
-    },
-];
+    { main: "notfound.main_1", sub: "notfound.sub_1" },
+    { main: "notfound.main_2", sub: "notfound.sub_2" },
+    { main: "notfound.main_3", sub: "notfound.sub_3" },
+    { main: "notfound.main_4", sub: "notfound.sub_4" },
+    { main: "notfound.main_5", sub: "notfound.sub_5" },
+    { main: "notfound.main_6", sub: "notfound.sub_6" },
+] as const;
 
 // This is the "acting" "default" component for the NotFound page.
 // It may be freely edited as if it were any other component.
 // See https://github.com/MindVista/website/wiki/Miscellaneous#404-page-handling for more details.
-function NotFoundComponent() {
+function NotFoundComponent({ locale, t }: { locale: Locale; t: Translator }) {
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
 
     return (
         <div className="mb-[16vmin] mt-[5vh] flex min-h-[70vh] flex-col items-center justify-center px-4 text-center">
             <h1 className="bg-gradient-to-r from-cAccent to-cLightBlue bg-clip-text text-[20vmax] font-bold text-transparent dark:to-cText">404</h1>
-            <p className="mb-3 text-xl font-semibold text-cText">{randomMessage.main}</p>
-            <p className="mb-8 text-lg font-medium text-cTextOffset">{randomMessage.sub}</p>
-            <Link href="/" className="inline-block rounded-lg bg-gradient-to-r from-cAccent to-cLightBlue px-6 py-3 font-medium text-cBackground transition-opacity hover:opacity-90 dark:to-cText">
-                Go Home
+            <p className="mb-3 text-xl font-semibold text-cText">{t(randomMessage.main)}</p>
+            <p className="mb-8 text-lg font-medium text-cTextOffset">{t(randomMessage.sub)}</p>
+            <Link href={`/${locale}`} className="inline-block rounded-lg bg-gradient-to-r from-cAccent to-cLightBlue px-6 py-3 font-medium text-cBackground transition-opacity hover:opacity-90 dark:to-cText">
+                {t("notfound.go_home")}
             </Link>
         </div>
     );
@@ -60,6 +43,7 @@ export default async function NotFound() {
     // root not-found has no [locale] param, so use the cookie set by LanguageSwitcher
     const locale = getLocale((await cookies()).get("locale")?.value ?? "");
     const translations = await getMessages(locale);
+    const t = await getTranslator(locale);
 
     // CHANGES MUST ONLY BE MADE BELOW IF MIRRORED FROM ONE OF:
     // - src/app/(app)/(pages)/layout.tsx or
@@ -116,13 +100,13 @@ export default async function NotFound() {
                 <NextTopLoader showSpinner={false} />
 
                 {/* APP LAYOUT CHILDREN START */}
-                <TranslationProvider messages={translations}>
+                <TranslationProvider messages={translations} locale={locale}>
                     {/* PAGES LAYOUT START */}
                     <NavBar locale={locale} />
 
                     <main className="pt-[10vh]">
                         {/* PAGES LAYOUT CHILDREN START */}
-                        <NotFoundComponent />
+                        <NotFoundComponent locale={locale} t={t} />
                         {/* PAGES LAYOUT CHILDREN END */}
                     </main>
 

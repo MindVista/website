@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState, Suspense } from "react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { ClubTag, ResourceTag, ClubTagCategory, ResourceTagCategory, Club, Resource } from "../../../../../../payload-types";
 import { fetchDirectoryData } from "./actions";
 import { DirectoryItemBoxSkeleton } from "./components/skeletons/DirectoryItemBoxSkeleton";
@@ -9,6 +9,8 @@ import { FiltersSkeleton } from "./components/skeletons/FiltersSkeleton";
 import { Filters } from "./components/Filters";
 import { FaSearch } from "react-icons/fa";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { getLocale } from "@/lib/i18n";
+import { translateTag } from "@/lib/tagTranslations";
 
 interface DirectoryContextType {
     filteredItems: Array<Club | Resource>;
@@ -42,6 +44,8 @@ interface DirectoryProviderProps {
 
 export function DirectoryProvider({ children }: DirectoryProviderProps) {
     const pathname = usePathname();
+    const locale = getLocale(useParams().locale as string);
+    const isFr = locale === "fr";
     const isClubDirectory = pathname?.includes("/clubs");
     const [searchQuery, setSearchQuery] = useState("");
     const [showFilters, setShowFilters] = useState(false);
@@ -144,10 +148,14 @@ export function DirectoryProvider({ children }: DirectoryProviderProps) {
             const matchesSearch =
                 item.title.toLowerCase().includes(searchLower) ||
                 item.description.toLowerCase().includes(searchLower) ||
+                // also match the French title/description shown to French users
+                (item.titleFr?.toLowerCase().includes(searchLower) ?? false) ||
+                (item.descriptionFr?.toLowerCase().includes(searchLower) ?? false) ||
                 (Array.isArray(item.tags) &&
                     item.tags.some((tag: ClubTag | ResourceTag | number) => {
                         if (typeof tag === "number") return false;
-                        return tag.name.toLowerCase().includes(searchLower);
+                        // match both the English name and the displayed (translated) name
+                        return tag.name.toLowerCase().includes(searchLower) || translateTag(tag.name, locale).toLowerCase().includes(searchLower);
                     }));
 
             if (!matchesSearch) return false;
@@ -242,11 +250,11 @@ export function DirectoryProvider({ children }: DirectoryProviderProps) {
         return (
             <div className="mt-8 flex flex-wrap justify-center gap-2">
                 <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className={`rounded-lg px-3 py-2 ${currentPage === 1 ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500" : "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"}`}>
-                    Previous
+                    {isFr ? "Précédent" : "Previous"}
                 </button>
                 <div className="flex items-center gap-1">{getVisiblePages().map((page) => (typeof page === "number" ? renderPageButton(page) : renderEllipsis(page)))}</div>
                 <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className={`rounded-lg px-3 py-2 ${currentPage === totalPages ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500" : "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"}`}>
-                    Next
+                    {isFr ? "Suivant" : "Next"}
                 </button>
             </div>
         );
@@ -265,13 +273,13 @@ export function DirectoryProvider({ children }: DirectoryProviderProps) {
             <div className="min-h-screen bg-cBackground">
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-8 md:px-12 lg:px-20">
                     <header className="mb-8 mt-8 text-center">
-                        <h1 className="mb-4 text-4xl font-bold text-cText">{isClubDirectory ? "Clubs Directory" : "Resources Directory"}</h1>
-                        <p className="text-lg text-cTextOffset">{isClubDirectory ? "Browse and filter through all available clubs." : "Browse and filter through all available resources."}</p>
+                        <h1 className="mb-4 text-4xl font-bold text-cText">{isClubDirectory ? (isFr ? "Répertoire des clubs" : "Clubs Directory") : isFr ? "Répertoire des ressources" : "Resources Directory"}</h1>
+                        <p className="text-lg text-cTextOffset">{isClubDirectory ? (isFr ? "Parcourez et filtrez tous les clubs disponibles." : "Browse and filter through all available clubs.") : isFr ? "Parcourez et filtrez toutes les ressources disponibles." : "Browse and filter through all available resources."}</p>
                     </header>
 
                     {/* Search - Always at top */}
                     <div className="relative mb-8">
-                        <input type="text" className="w-full rounded-lg border border-cBorder bg-cBackgroundOffset p-4 pl-12 text-cText placeholder-cTextOffset transition-colors duration-200 hover:border-blue-400 focus:border-blue-500 focus:outline-none dark:hover:border-blue-500 dark:focus:border-blue-400" placeholder={isClubDirectory ? "Search clubs..." : "Search resources..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        <input type="text" className="w-full rounded-lg border border-cBorder bg-cBackgroundOffset p-4 pl-12 text-cText placeholder-cTextOffset transition-colors duration-200 hover:border-blue-400 focus:border-blue-500 focus:outline-none dark:hover:border-blue-500 dark:focus:border-blue-400" placeholder={isClubDirectory ? (isFr ? "Rechercher des clubs..." : "Search clubs...") : isFr ? "Rechercher des ressources..." : "Search resources..."} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         <FaSearch className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-cTextOffset" />
                     </div>
 
@@ -283,15 +291,15 @@ export function DirectoryProvider({ children }: DirectoryProviderProps) {
                                 {/* Mobile Filter Toggle */}
                                 <button className="flex w-full items-center justify-between p-4 text-left transition-colors duration-200 hover:bg-cBackground lg:hidden" onClick={() => setShowFilters(!showFilters)}>
                                     <div className="flex items-center gap-2">
-                                        <h2 className="text-2xl font-semibold text-cText">Filters</h2>
-                                        <span className="text-sm text-cTextOffset">{activeFilters.size > 0 ? `(${activeFilters.size} active)` : ""}</span>
+                                        <h2 className="text-2xl font-semibold text-cText">{isFr ? "Filtres" : "Filters"}</h2>
+                                        <span className="text-sm text-cTextOffset">{activeFilters.size > 0 ? (isFr ? `(${activeFilters.size} actif${activeFilters.size > 1 ? "s" : ""})` : `(${activeFilters.size} active)`) : ""}</span>
                                     </div>
                                     <RiArrowDropDownLine className={`h-9 w-9 transform text-cText transition-transform duration-200 ${showFilters ? "rotate-180" : ""}`} />
                                 </button>
 
                                 {/* Filters Content */}
                                 <div className={`px-4 pb-4 pt-2 lg:block lg:p-0 ${showFilters ? "block" : "hidden"}`}>
-                                    <Suspense fallback={<FiltersSkeleton />}>{isLoading ? <FiltersSkeleton /> : <Filters tagsByCategory={tagsByCategory} activeFilters={activeFilters} onFilterChange={handleFilterChange} />}</Suspense>
+                                    <Suspense fallback={<FiltersSkeleton />}>{isLoading ? <FiltersSkeleton /> : <Filters tagsByCategory={tagsByCategory} activeFilters={activeFilters} onFilterChange={handleFilterChange} locale={locale} />}</Suspense>
                                 </div>
                             </div>
                         </div>
@@ -319,7 +327,7 @@ export function DirectoryProvider({ children }: DirectoryProviderProps) {
                                     </Suspense>
                                 ) : (
                                     <div className="col-span-full text-center text-cTextOffset">
-                                        <p className="text-lg">No {isClubDirectory ? "clubs" : "resources"} found matching your criteria.</p>
+                                        <p className="text-lg">{isFr ? `Aucun${isClubDirectory ? " club" : "e ressource"} ne correspond à vos critères.` : `No ${isClubDirectory ? "clubs" : "resources"} found matching your criteria.`}</p>
                                     </div>
                                 )}
                             </div>

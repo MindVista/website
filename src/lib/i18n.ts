@@ -9,3 +9,8 @@ export function getLocale(locale: string): Locale {
 export function isLocale(locale: string): locale is Locale {
     return locales.includes(locale as Locale);
 }
+
+// picks the French value of a CMS field when on the French site, falling back to English if it hasn't been translated yet
+export function localize<T>(locale: Locale, en: T, fr: T | null | undefined): T {
+    return locale === "fr" && fr ? fr : en;
+}

@@ -13,7 +13,6 @@ import darkThemeImage from "@public/landing/jon-j_mk18.webp";
 
 import { TbStretching2, TbHeartHandshake, TbCirclesRelation, TbApple, TbZzz, TbUserCheck } from "react-icons/tb";
 import { HiArrowLongRight } from "react-icons/hi2";
-import Link from "next/link";
 import InfoSeparator from "../components/index/InfoSeparator";
 import { getPayloadClient } from "@/payloadClient";
 import { SponsorLogos } from "./(pages)/sponsor/components/SponsorLogos";
@@ -31,7 +30,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     return (
         <>
             <div className="max-lg:hidden">
-                <AnnouncementBar {...announcementData} />
+                <AnnouncementBar {...announcementData} locale={locale} />
                 <NavigationController hasAnnouncement={announcementData.isEnabled} locale={locale} />
             </div>
             <div className="lg:hidden">
@@ -50,9 +49,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                         {/* Column Image */}
                         <div className="absolute inset-0 left-1/2 w-[25vw] -translate-x-1/2 transform">
-                            <Image priority src={lightThemeImage} alt="Waves on the beach." className="h-full w-full object-cover dark:hidden" />
+                            <Image priority src={lightThemeImage} alt={t("home.alt_waves")} className="h-full w-full object-cover dark:hidden" />
                             <div className="hidden dark:inline">
-                                <Image priority src={darkThemeImage} alt="A mountain range with a big blue sky." className="h-full w-full object-cover" />
+                                <Image priority src={darkThemeImage} alt={t("home.alt_mountains")} className="h-full w-full object-cover" />
                                 <div className="absolute inset-0 bg-black/30"></div>
                             </div>
                         </div>
@@ -127,12 +126,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                     <h2 className="text-center text-3xl font-bold md:text-4xl">{t("home.sponsor_thanks")}</h2>
                     <p className="py-3 text-center text-xl font-medium text-cTextOffset md:px-20 lg:px-28">{t("home.sponsor_grateful")}</p>
                     <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 items-center justify-items-center gap-8 md:grid-cols-2 md:gap-0">
-                        <SponsorLogos sponsors={sponsorData.sponsors} />
+                        <SponsorLogos sponsors={sponsorData.sponsors} locale={locale} />
                     </div>
                     <div className="mt-10 flex justify-center">
-                        <Link href="/sponsor" className="flex items-center gap-3 rounded-lg border border-cBorder p-3 text-lg font-semibold transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
+                        <LocaleLink href="/sponsor" className="flex items-center gap-3 rounded-lg border border-cBorder p-3 text-lg font-semibold transition-all duration-200 hover:border-blue-400 hover:text-blue-600 hover:shadow-lg hover:shadow-blue-50 dark:hover:border-blue-500 dark:hover:text-blue-400 dark:hover:shadow-blue-950/50">
                             {t("home.become_sponsor")} <HiArrowLongRight />
-                        </Link>
+                        </LocaleLink>
                     </div>
                 </section>
             </main>

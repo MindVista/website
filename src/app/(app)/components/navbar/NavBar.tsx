@@ -57,7 +57,7 @@ export default function NavBar({ locale }: NavBarProps) {
                     <LanguageSwitcher currentLocale={locale} />
                     <div className="flex items-center gap-5">
                         {socialLinks.map((link) => (
-                            <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent transition-transform hover:scale-110 dark:text-white" size="1.5rem" />
+                            <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} locale={locale} className="text-cAccent transition-transform hover:scale-110 dark:text-white" size="1.5rem" />
                         ))}
                     </div>
                 </div>
@@ -80,8 +80,9 @@ interface HamburgerProps {
     setNav: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function Hamburger({ nav, setNav }: HamburgerProps) {
+    const t = useTranslations();
     return (
-        <button className={`${nav ? styles["is-active"] : ""} ${styles.hamburger} ${styles["hamburger--spin"]}`} type="button" aria-label="Toggle Navigation Menu" aria-controls="navigation" onClick={() => setNav(!nav)}>
+        <button className={`${nav ? styles["is-active"] : ""} ${styles.hamburger} ${styles["hamburger--spin"]}`} type="button" aria-label={t("common.toggle_nav")} aria-controls="navigation" onClick={() => setNav(!nav)}>
             <span className={styles["hamburger-box"]}>
                 <span className={styles["hamburger-inner"]}></span>
             </span>
@@ -130,7 +131,7 @@ function NavMenu({ nav, locale }: NavMenuProps) {
             <EmergencyButton className="mt-2" locale={locale} />
             <div className="mt-3 flex items-center gap-5">
                 {socialLinks.map((link) => (
-                    <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} className="text-cAccent dark:text-white" size="1.5rem" />
+                    <SocialMediaLink key={link.label} href={link.href} icon={link.icon} label={link.label} locale={locale} className="text-cAccent dark:text-white" size="1.5rem" />
                 ))}
             </div>
         </div>
@@ -171,7 +172,7 @@ function LogoButton() {
     const t = useTranslations();
     return (
         <LocaleLink href="/" className="flex flex-row gap-2 text-left text-cAccent transition-transform hover:scale-110">
-            <Image width={164} height={164} className="max-w-12 rounded-full border-4 border-cAccent bg-cAccent dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt="MindVista Logo" priority />
+            <Image width={164} height={164} className="max-w-12 rounded-full border-4 border-cAccent bg-cAccent dark:border-0 dark:bg-transparent" src="/logoWhite.png" alt={t("common.logo_alt")} priority />
 
             <div className="flex flex-col max-lg:hidden dark:text-white">
                 <h1 className="text-lg font-bold">MINDVISTA</h1>
