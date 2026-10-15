@@ -24,7 +24,7 @@
         "@hcaptcha/react-hcaptcha": "^1.11.2",
         "@hookform/resolvers": "^3.9.1",
         "@mailchimp/mailchimp_marketing": "^3.0.80",
-        "@payloadcms/db-postgres": "^3.35.1",
+        "@payloadcms/db-postgres": "^3.73.0",
         "@payloadcms/db-vercel-postgres": "^3.35.1",
         "@payloadcms/email-resend": "^3.35.1",
         "@payloadcms/live-preview-react": "^3.35.1",
