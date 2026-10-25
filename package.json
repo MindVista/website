@@ -85,7 +85,7 @@
         "tar": "^7.4.3",
         "typescript": "5.7.2",
         "vite-tsconfig-paths": "^5.1.4",
-        "vitest": "^3.0.7"
+        "vitest": "^5.0.5"
     },
     "engines": {
         "node": "^18.20.2 || >=20.9.0"
